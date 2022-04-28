@@ -4,7 +4,7 @@ c = canv.getContext('2d')
 canv.style.border = 'solid 2px white'
 
 canv.width = 896.5
-canv.height = 560
+canv.height = 576
 
 
 
@@ -30,8 +30,8 @@ const map = new Sprite({
 
 const obj = new Player({
     CanvPosition: {
-        x: 0,
-        y: 0
+        x: canv.width/2,
+        y: canv.height/2
     },
     imageSrc: 'img/postac.gif'
 })
@@ -41,16 +41,16 @@ function go() {
     if (!obj.ingo) {    
         if (keys.d.pressed && obj.lastKey === 'd') {
             obj.FrameCurrent.height = 2
-            obj.AnimationFrames({obj:map,speed:{x:2,y:0}})
+            obj.AnimationFrames({obj:map,speed:{x:2,y:0},key:'d'})
         } else if (keys.a.pressed && obj.lastKey === 'a') {
             obj.FrameCurrent.height = 1
-            obj.AnimationFrames({obj:map,speed:{x:-2,y:0}})
+            obj.AnimationFrames({obj:map,speed:{x:-2,y:0},key:'a'})
         } else if (keys.w.pressed && obj.lastKey === 'w') {
             obj.FrameCurrent.height = 3
-            obj.AnimationFrames({obj:map,speed:{x:0,y:-2}})
+            obj.AnimationFrames({obj:map,speed:{x:0,y:-2},key:'w'})
         } else if (keys.s.pressed && obj.lastKey === 's') {
             obj.FrameCurrent.height = 0
-            obj.AnimationFrames({obj:map,speed:{x:0,y:2}})
+            obj.AnimationFrames({obj:map,speed:{x:0,y:2},key:'s'})
         } 
     }
 }

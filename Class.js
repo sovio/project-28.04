@@ -131,12 +131,12 @@ class Player extends Sprite {
         
     }
 
-    AnimationFrames({obj,speed={}, x=0}){
+    AnimationFrames({obj,speed={}, x=1, key = null}){
         this.ingo = true
         const intervalID = setInterval(() => {
             //this.CamCenter({obj: obj,positions: speed})
-            this.CanvPosition.x += speed.x
-            this.CanvPosition.y += speed.y 
+           /*  this.CanvPosition.x += speed.x
+            this.CanvPosition.y += speed.y  */
            
 
    /*          if(obj.image.width - this.RelativePosition.x < 450 && obj.image.height - this.RelativePosition.y < 280){
@@ -145,24 +145,27 @@ class Player extends Sprite {
             }
  */         
         
-            /* if (
-                (obj.CanvPosition.x-obj.offset.x+speed.x < 0 || this.RelativePosition.x < 448) || 
-                (obj.offset.x - canv.width - speed.x < - obj.image.width) || (this.RelativePosition.x + 448 > obj.image.width)) {
+             if ( (key == 'a' || key =='d') &&
+                ((obj.CanvPosition.x-obj.offset.x+speed.x < 0) || (this.RelativePosition.x < 448)) || 
+                ((obj.offset.x - canv.width - speed.x < - obj.image.width) || (this.RelativePosition.x + 448 > obj.image.width)) )  {
+
                 this.playerMoveX({speed: speed})
                 this.mapMoveY({obj: obj, position: speed})
 
-            }else if ((obj.CanvPosition.y + obj.offset.y - speed.y > 0 || this.RelativePosition.y < 280) ||
-                (obj.offset.y - canv.height - speed.y < -obj.image.height) || (this.RelativePosition.y + 280 > obj.image.height)) {
+            }else if (((obj.CanvPosition.y + obj.offset.y - speed.y > 0) || (this.RelativePosition.y < 288)) ||
+                ((obj.offset.y - canv.height - speed.y < -obj.image.height) || (this.RelativePosition.y + 288 > obj.image.height))) {
+
                 this.playerMoveY({speed: speed})
                 this.mapMoveX({obj: obj, position: speed})
             } else  {
+
                 this.mapMoveX({obj: obj, position: speed})
                 this.mapMoveY({obj: obj, position: speed})
-            } */
-            console.log(this.CanvPosition.x)
+            } 
+            //console.log(this.CanvPosition.x)
             
 
-            if (x % 4 === 0){ 
+            if (x % 4 === 0 && x != 0) { 
                 this.FrameCurrent.width++
                 if (this.FrameCurrent.width === 4) {
                     this.FrameCurrent.width = 0
@@ -170,10 +173,7 @@ class Player extends Sprite {
                     this.ingo = false
                 }
             }
-
-            
             x++
-            
         }, 25);
     }       
 }
