@@ -1,5 +1,6 @@
 class Sprite {
-    constructor({CanvPosition = {x:0, y:0}, imageSrc, frameMax = 1}){
+    constructor ({CanvPosition = {x:0, y:0}, imageSrc, frameMax = 1, collisions = {}}){
+        this.collisions = collisions
         this.CanvPosition = CanvPosition
         this.image = new Image()
         this.offset = {
@@ -14,6 +15,7 @@ class Sprite {
         }
         }
         draw(){
+           // c.fillRect(this.collisions[0].x,this.collisions[0].y,this.collisions[0].width,this.collisions[0].height)
             this.CanvPosition.x + this.offset.x
             this.CanvPosition.y + this.offset.y
             c.drawImage(
@@ -36,7 +38,7 @@ class Sprite {
 
 class Player extends Sprite {
 
-    constructor({
+    constructor ({
         width = 32,
         height = 32,
         CanvPosition = {
