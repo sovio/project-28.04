@@ -25,13 +25,13 @@ keys = {
 }
 
 const map = new Sprite({
-    imageSrc: 'img/map.jpeg'
+    imageSrc: 'img/MAP.png'
 })
 
 const obj = new Player({
     CanvPosition: {
-        x: canv.width/2,
-        y: canv.height/2
+        x: 0,
+        y: 64
     },
     imageSrc: 'img/postac.gif'
 })

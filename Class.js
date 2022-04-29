@@ -131,49 +131,50 @@ class Player extends Sprite {
         
     }
 
-    AnimationFrames({obj,speed={}, x=1, key = null}){
-        this.ingo = true
-        const intervalID = setInterval(() => {
-            //this.CamCenter({obj: obj,positions: speed})
-           /*  this.CanvPosition.x += speed.x
-            this.CanvPosition.y += speed.y  */
-           
+    AnimationFrames ({obj,speed={}, x=1, key = null}) {
+        //
+        //console.log(this.RelativePosition.y-speed.y > 0)
+        if(
+            (this.RelativePosition.x + speed.x >= 0 && 
+            this.RelativePosition.x + this.width + speed.x <= obj.image.width) && 
+            (this.RelativePosition.y+speed.y >= 0 && 
+            this.RelativePosition.y + this.height + speed.y <= obj.image.height)
+        ){
+                this.ingo = true
+                const intervalID = setInterval(() => {        
+                
+                    if ((key === 'a' || key === 'd') &&
+                        (obj.CanvPosition.x-obj.offset.x+speed.x < 0 || 
+                        this.RelativePosition.x < 448 || 
+                        obj.offset.x - canv.width - speed.x < - obj.image.width || 
+                        this.RelativePosition.x + 448 > obj.image.width)) {
+                            this.playerMoveX({speed: speed})
+                            this.mapMoveY({obj: obj, position: speed})
 
-   /*          if(obj.image.width - this.RelativePosition.x < 450 && obj.image.height - this.RelativePosition.y < 280){
-                this.playerMoveX({speed: speed})
-                this.playerMoveY({speed: speed})
-            }
- */         
-        
-             if ( (key == 'a' || key =='d') &&
-                ((obj.CanvPosition.x-obj.offset.x+speed.x < 0) || (this.RelativePosition.x < 448)) || 
-                ((obj.offset.x - canv.width - speed.x < - obj.image.width) || (this.RelativePosition.x + 448 > obj.image.width)) )  {
+                    }else if (obj.CanvPosition.y + obj.offset.y - speed.y > 0 || 
+                            this.RelativePosition.y < 288 ||
+                            obj.offset.y - canv.height - speed.y < -obj.image.height || 
+                            this.RelativePosition.y + 288 > obj.image.height) {
+                                this.playerMoveY({speed: speed})
+                                this.mapMoveX({obj: obj, position: speed})
 
-                this.playerMoveX({speed: speed})
-                this.mapMoveY({obj: obj, position: speed})
+                    } else  {
 
-            }else if (((obj.CanvPosition.y + obj.offset.y - speed.y > 0) || (this.RelativePosition.y < 288)) ||
-                ((obj.offset.y - canv.height - speed.y < -obj.image.height) || (this.RelativePosition.y + 288 > obj.image.height))) {
+                        this.mapMoveX({obj: obj, position: speed})
+                        this.mapMoveY({obj: obj, position: speed})
+                    } 
+                    
 
-                this.playerMoveY({speed: speed})
-                this.mapMoveX({obj: obj, position: speed})
-            } else  {
-
-                this.mapMoveX({obj: obj, position: speed})
-                this.mapMoveY({obj: obj, position: speed})
-            } 
-            //console.log(this.CanvPosition.x)
-            
-
-            if (x % 4 === 0 && x != 0) { 
-                this.FrameCurrent.width++
-                if (this.FrameCurrent.width === 4) {
-                    this.FrameCurrent.width = 0
-                    clearInterval(intervalID)
-                    this.ingo = false
-                }
-            }
-            x++
-        }, 25);
+                    if (x % 4 === 0 && x != 0) { 
+                        this.FrameCurrent.width++
+                        if (this.FrameCurrent.width === 4) {
+                            this.FrameCurrent.width = 0
+                            clearInterval(intervalID)
+                            this.ingo = false
+                        }
+                    }
+                    x++
+                }, 25);
+        }
     }       
 }
