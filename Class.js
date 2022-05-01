@@ -15,9 +15,6 @@ class Sprite {
         }
         }
         draw(){
-           // c.fillRect(this.collisions[0].x,this.collisions[0].y,this.collisions[0].width,this.collisions[0].height)
-            this.CanvPosition.x + this.offset.x
-            this.CanvPosition.y + this.offset.y
             c.drawImage(
                 this.image,
                 this.FrameCurrent.width*(this.image.width/this.frameMax), 
@@ -29,6 +26,20 @@ class Sprite {
                 this.image.width/this.frameMax, 
                 this.image.height/this.frameMax
             )
+            
+           
+            for (const [key, value] of Object.entries(this.collisions)) {
+                c.fillRect(
+                    value.x + this.offset.x,
+                    value.y + this.offset.y,
+                    value.width,
+                    value.height
+                ) 
+                
+            }
+
+            
+
         }
 
         update(){
@@ -93,7 +104,8 @@ class Player extends Sprite {
         
     }
     draw() {
-        //c.fillRect(obj.CanvPosition.x, obj.CanvPosition.y,32,32)
+        //c.fillRect(this.CanvPosition.x, this.CanvPosition.y,32,32)
+        
         c.drawImage(
             this.image,
             this.FrameCurrent.width*(this.image.width/this.frameMax), 
@@ -133,7 +145,18 @@ class Player extends Sprite {
         
     }
 
-    AnimationFrames ({obj,speed={}, x=1, key = null}) {
+    AnimationFrames ({x, intervalID}) {
+        if (x % 4 === 0 && x != 0) { 
+            this.FrameCurrent.width++
+            if (this.FrameCurrent.width === 4) {
+                this.FrameCurrent.width = 0
+                clearInterval(intervalID)
+                this.ingo = false
+            }
+        }
+    }
+
+    SCollisions ({obj,speed={}, x=1, key = null}) {
         //
         //console.log(this.RelativePosition.y-speed.y > 0)
         if(
@@ -166,15 +189,8 @@ class Player extends Sprite {
                         this.mapMoveY({obj: obj, position: speed})
                     } 
                     
-
-                    if (x % 4 === 0 && x != 0) { 
-                        this.FrameCurrent.width++
-                        if (this.FrameCurrent.width === 4) {
-                            this.FrameCurrent.width = 0
-                            clearInterval(intervalID)
-                            this.ingo = false
-                        }
-                    }
+                    this.AnimationFrames({x: x, intervalID: intervalID})
+                   
                     x++
                 }, 25);
         }

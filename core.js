@@ -38,7 +38,85 @@ const map = new Sprite({
             y: 0,
             width: 64,
             height: 64
-        }
+        },
+        2: {
+            x: 256,
+            y: 0,
+            width: 64,
+            height: 32
+        },
+        3: {
+            x: 128,
+            y: 128,
+            width: 64,
+            height: 384
+        },
+        4: {
+            x: 0,
+            y: 192,
+            width: 128,
+            height: 32
+        },
+        5: {
+            x: 192,
+            y: 192,
+            width: 96,
+            height: 64
+        },
+        6: {
+            x: 192,
+            y: 480,
+            width: 96,
+            height: 96
+        },
+        7: {
+            x: 192,
+            y: 320,
+            width: 96,
+            height: 64
+        },
+        8: {
+            x: 192,
+            y: 384,
+            width: 64,
+            height: 64,
+        },
+        9: {
+            x: 384,
+            y: 0,
+            width: 96,
+            height: 64,
+        },
+        10: {
+            x: 256,
+            y: 128,
+            width: 32,
+            height: 64,
+        },
+        11: {
+            x: 352,
+            y: 128,
+            width: 160,
+            height: 64,
+        },
+        12: {
+            x: 352,
+            y: 192,
+            width: 32,
+            height: 64,
+        },
+        13: {
+            x: 352,
+            y: 320,
+            width: 160,
+            height: 64,
+        },
+        14: {
+            x: 448,
+            y: 192,
+            width: 64,
+            height: 128,
+        },
     }
 })
 

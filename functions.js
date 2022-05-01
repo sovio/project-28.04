@@ -3,16 +3,16 @@ function go() {
     if (!obj.ingo) {    
         if (keys.d.pressed && obj.lastKey === 'd') {
             obj.FrameCurrent.height = 2
-            obj.AnimationFrames({obj:map,speed:{x:2,y:0},key:'d'})
+            obj.SCollisions({obj:map, speed:{x:2,y:0},key:'d'})
         } else if (keys.a.pressed && obj.lastKey === 'a') {
             obj.FrameCurrent.height = 1
-            obj.AnimationFrames({obj:map,speed:{x:-2,y:0},key:'a'})
+            obj.SCollisions({obj:map, speed:{x:-2,y:0},key:'a'})
         } else if (keys.w.pressed && obj.lastKey === 'w') {
             obj.FrameCurrent.height = 3
-            obj.AnimationFrames({obj:map,speed:{x:0,y:-2},key:'w'})
+            obj.SCollisions({obj:map, speed:{x:0,y:-2},key:'w'})
         } else if (keys.s.pressed && obj.lastKey === 's') {
             obj.FrameCurrent.height = 0
-            obj.AnimationFrames({obj:map,speed:{x:0,y:2},key:'s'})
+            obj.SCollisions({obj:map, speed:{x:0,y:2},key:'s'})
         } 
     }
 }
