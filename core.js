@@ -5,6 +5,7 @@ canv.style.border = 'solid 2px white'
 
 canv.width = 896.5
 canv.height = 576
+canv.style.marginTop = `${window.screen.height/12}px`
 
 
 
@@ -23,6 +24,8 @@ keys = {
         pressed: false
     }
 }
+
+
 
 const map = new Sprite({
     imageSrc: 'img/MAP.png',
@@ -265,3 +268,6 @@ const obj = new Player({
     },
     imageSrc: 'img/postac.gif'
 })
+
+const FightBox = new BattleBox()
+FightBox.Create()

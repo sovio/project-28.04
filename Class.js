@@ -46,6 +46,7 @@ class Sprite {
         }
 }
 
+
 class Player extends Sprite {
 
     constructor ({
@@ -216,4 +217,31 @@ class Player extends Sprite {
                 }, 25);
         }
     }       
+}
+class BattleBox {
+    constructor(){`1`
+        this.Position = {}
+        this.RelativePosition = {}
+        
+    }
+    Create() {
+        const GBox = document.querySelector('#GameBox')
+        const FBox = document.createElement('div')
+        FBox.id = 'FightBox'
+        FBox.style = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        margin-left: 15%;
+        margin-right: auto !important;
+        display: block;
+       
+        width: ${canv.width*0.90}px;
+        height: ${canv.height*0.90}px
+        `
+        canv.before(FBox)
+    }
 }
