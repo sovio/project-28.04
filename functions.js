@@ -1,5 +1,5 @@
 function go() {
-    
+    obj.Oncolision = true
     if (!obj.ingo) {    
         if (keys.d.pressed && obj.lastKey === 'd') {
             obj.FrameCurrent.height = 2

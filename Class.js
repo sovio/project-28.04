@@ -28,15 +28,14 @@ class Sprite {
             )
             
            
-            for (const [key, value] of Object.entries(this.collisions)) {
+            /* for (const [key, value] of Object.entries(this.collisions)) {
                 c.fillRect(
                     value.x + this.offset.x,
                     value.y + this.offset.y,
                     value.width,
                     value.height
                 ) 
-                
-            }
+            } */
 
             
 
@@ -83,6 +82,7 @@ class Player extends Sprite {
         },
         this.lastKey = undefined
 
+        this.Oncolision = false
         this.ingo = false
         this.image = new Image()
         this.image.src = imageSrc
@@ -159,12 +159,33 @@ class Player extends Sprite {
     SCollisions ({obj,speed={}, x=1, key = null}) {
         //
         //console.log(this.RelativePosition.y-speed.y > 0)
-        if(
-            (this.RelativePosition.x + speed.x >= 0 && 
+
+        /* obj.collisions[3].x + obj.collisions[3].width <= this.RelativePosition.x + speed.x ||
+                this.RelativePosition.x + this.width + this.speed.x <= obj.collisions[3].x  WORK*/
+
+        /* obj.collisions[3].y >= this.RelativePosition.y + this.height + speed.y ||  */
+
+
+
+        if((this.RelativePosition.x + speed.x >= 0 && 
             this.RelativePosition.x + this.width + speed.x <= obj.image.width) && 
             (this.RelativePosition.y+speed.y >= 0 && 
-            this.RelativePosition.y + this.height + speed.y <= obj.image.height)
-        ){
+            this.RelativePosition.y + this.height + speed.y <= obj.image.height)){
+                for (const [key, value] of Object.entries(obj.collisions)) {
+                    if (value.x + value.width <= this.RelativePosition.x + speed.x ||
+                        this.RelativePosition.x + this.width + speed.x <= value.x ||
+                        value.y >= this.RelativePosition.y + this.height + speed.y ||
+                        value.y + value.height <= this.RelativePosition.y + speed.y) {
+                    }else{
+                        this.Oncolision = false
+                        break;
+                    }
+                }
+                
+        } else {
+            this.Oncolision = false
+        }
+        if (this.Oncolision) {
                 this.ingo = true
                 const intervalID = setInterval(() => {        
                 
