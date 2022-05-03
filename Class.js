@@ -67,6 +67,11 @@ class Player extends Sprite {
             frameMax,
         }
         )
+
+        this.lvl = 1
+        this.NickName = 'Sovio'
+        this.ClassName = 'Mag'
+
         this.width = width
         this.height = height
         this.CanvPosition = {
@@ -216,8 +221,16 @@ class Player extends Sprite {
                     x++
                 }, 25);
         }
-    }       
+    } 
+    InfoBox() {
+
+    }    
 }
+
+
+
+
+
 class BattleBox {
     constructor(){`1`
         this.Position = {}
@@ -238,7 +251,7 @@ class BattleBox {
         margin-left: 15%;
         margin-right: auto !important;
         display: block;
-       
+        background-color: red;
         width: ${canv.width*0.90}px;
         height: ${canv.height*0.90}px
         `

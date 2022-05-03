@@ -270,4 +270,4 @@ const obj = new Player({
 })
 
 const FightBox = new BattleBox()
-FightBox.Create()
+//FightBox.Create()

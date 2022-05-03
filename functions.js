@@ -30,6 +30,25 @@ function animation() {
 }
 animation()
 
+function ShowCharInfo({e}) {
+    //console.log(e.offsetX, e.offsetY)
+   /*  obj.CanvPosition.x <= e.offsetX && 
+        obj.CanvPosition.x + obj.width >= e.offsetX &&  */
+    if (obj.CanvPosition.x <= e.offsetX && 
+        obj.CanvPosition.x + obj.width >= e.offsetX && 
+        obj.CanvPosition.y <= e.offsetY && 
+        obj.CanvPosition.y + obj.height >= e.offsetY){
+        console.log(e.offsetX, e.offsetY)
+    }
+}
+
+canv.addEventListener('mouseover', (e) => {
+    ShowCharInfo({e:e})
+})
+canv.addEventListener('mousemove', (e) => {
+    ShowCharInfo({e:e})
+})
+
 window.addEventListener('keydown', (e) => {
     switch (e.key) {
         case 'd':
