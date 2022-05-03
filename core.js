@@ -27,7 +27,7 @@ keys = {
 
 
 
-const map = new Sprite({
+const map = new Maps({
     imageSrc: 'img/MAP.png',
     collisions: {
         0: {
@@ -262,12 +262,33 @@ const map = new Sprite({
 })
 
 const obj = new Player({
+    lvl: 10,
+    ClassName: 'M',
     CanvPosition: {
         x: 0,
         y: 64
     },
     imageSrc: 'img/postac.gif'
 })
+  const enemys = {
+    0: new Enemy({
+        ClassName: 'W',
+        lvl: 1,
+        imageSrc: 'img/enemy.gif',
+        offset: {
+            x: 224,
+            y: 96
+        }
+    })
+}  
+/* const enemy = new Enemy({
+    lvl: 1,
+    imageSrc: 'img/enemy.gif',
+    offset: {
+        x: 224,
+        y: 96
+    }
+}) */
 
 const FightBox = new BattleBox()
 //FightBox.Create()

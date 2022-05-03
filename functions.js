@@ -22,6 +22,8 @@ function animation() {
         
     c.clearRect(0,0,canv.width,canv.height)
     map.update()
+    enemys[0].update()
+    //enemy.update()
     obj.update()
     
 
@@ -30,23 +32,19 @@ function animation() {
 }
 animation()
 
-function ShowCharInfo({e}) {
-    //console.log(e.offsetX, e.offsetY)
-   /*  obj.CanvPosition.x <= e.offsetX && 
-        obj.CanvPosition.x + obj.width >= e.offsetX &&  */
-    if (obj.CanvPosition.x <= e.offsetX && 
-        obj.CanvPosition.x + obj.width >= e.offsetX && 
-        obj.CanvPosition.y <= e.offsetY && 
-        obj.CanvPosition.y + obj.height >= e.offsetY){
-        console.log(e.offsetX, e.offsetY)
-    }
-}
-
-canv.addEventListener('mouseover', (e) => {
-    ShowCharInfo({e:e})
-})
 canv.addEventListener('mousemove', (e) => {
-    ShowCharInfo({e:e})
+    for (const [key, value] of Object.entries(enemys)) {
+        if(obj.GameObjectHitBox({e:e})){
+            obj.InfoBox({e:e})
+            break
+        }else if (value.GameObjectHitBox({e:e})) {
+            value.InfoBox({e:e})
+        }else{
+            if (document.querySelector('#InfoBox') != null) {
+                document.querySelector('#InfoBox').remove()
+            }
+        }
+    }
 })
 
 window.addEventListener('keydown', (e) => {
@@ -74,22 +72,18 @@ window.addEventListener('keyup', (e) => {
         case 'd':
             obj.lastKey = undefined
             keys.d.pressed = false
-            //obj.FrameCurrent.width = 0
             break
         case 'a':
             obj.lastKey = undefined
             keys.a.pressed = false
-           // obj.FrameCurrent.width = 0
             break
         case 'w':
             obj.lastKey = undefined
             keys.w.pressed = false
-            //obj.FrameCurrent.width = 0
             break
         case 's':
             obj.lastKey = undefined
             keys.s.pressed = false
-            //obj.FrameCurrent.width = 0
             break
     }
 })

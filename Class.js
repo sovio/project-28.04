@@ -14,129 +14,157 @@ class Sprite {
             height: 0
         }
         }
-        draw(){
-            c.drawImage(
-                this.image,
-                this.FrameCurrent.width*(this.image.width/this.frameMax), 
-                this.FrameCurrent.height*(this.image.height/this.frameMax), 
-                this.image.width/this.frameMax, 
-                this.image.height/this.frameMax, 
-                this.CanvPosition.x + this.offset.x, 
-                this.CanvPosition.y + this.offset.y, 
-                this.image.width/this.frameMax, 
-                this.image.height/this.frameMax
-            )
-            
-           
-            /* for (const [key, value] of Object.entries(this.collisions)) {
-                c.fillRect(
-                    value.x + this.offset.x,
-                    value.y + this.offset.y,
-                    value.width,
-                    value.height
-                ) 
-            } */
-
-            
-
-        }
 
         update(){
         this.draw()    
         }
 }
 
-
-class Player extends Sprite {
-
-    constructor ({
-        width = 32,
-        height = 32,
-        CanvPosition = {
-            x: 0, 
-            y: 0
-        },
+class Maps extends Sprite {
+    constructor({
+        CanvPosition,
         imageSrc,
-        frameMax = 4
-        
-    }){
+        frameMax,
+        collisions = {},
 
+    }){
         super({
             CanvPosition,
             imageSrc,
-            frameMax,
-        }
-        )
-
-        this.lvl = 1
-        this.NickName = 'Sovio'
-        this.ClassName = 'Mag'
-
-        this.width = width
-        this.height = height
-        this.CanvPosition = {
-            x: CanvPosition.x,
-            y: CanvPosition.y,
-        },
-        this.RelativePosition = {
-            x: this.CanvPosition.x,
-            y: this.CanvPosition.y
-        }
-        this.speed = {
-            x: 0,
-            y: 0
-        },
-        this.lastKey = undefined
-
-        this.Oncolision = false
-        this.ingo = false
-        this.image = new Image()
-        this.image.src = imageSrc
-        this.offset = {
-            x: 0,
-            y: 0
-        }
-        this.PlayerOffset = {
-            x: 0,
-            y: 16
-        }
-        this.FrameCurrent = {
-            width: 0,
-            height: 0
-        }
-        this.frameElapse = 0
-        this.frameHold = 15
-        this.frameMax = frameMax
-        
+            frameMax
+        })
+        this.collisions = collisions
     }
-    draw() {
-        //c.fillRect(this.CanvPosition.x, this.CanvPosition.y,32,32)
-        
+    draw(){
         c.drawImage(
             this.image,
             this.FrameCurrent.width*(this.image.width/this.frameMax), 
             this.FrameCurrent.height*(this.image.height/this.frameMax), 
             this.image.width/this.frameMax, 
             this.image.height/this.frameMax, 
-            this.CanvPosition.x+this.offset.x, 
-            this.CanvPosition.y+this.offset.y-16, 
+            this.CanvPosition.x + this.offset.x, 
+            this.CanvPosition.y + this.offset.y, 
             this.image.width/this.frameMax, 
             this.image.height/this.frameMax
         )
-    }
-    update() {
 
-        this.draw()
+        /* for (const [key, value] of Object.entries(this.collisions)) {
+            c.fillRect(
+                value.x + this.offset.x,
+                value.y + this.offset.y,
+                value.width,
+                value.height
+            ) 
+        } */
     }
+}
 
+class GameObject extends Sprite {
+    constructor({
+        CanvPosition,
+        imageSrc,
+        frameMax = 4,
+        lvl,
+        ClassName
+    }){
+        super({
+                CanvPosition,
+                imageSrc,
+                frameMax
+            })
+            this.lvl = lvl
+            this.width = 32
+            this.height = 32
+            this.ClassName = ClassName
+    }
+    draw() {
+        //c.fillRect(this.CanvPosition.x, this.CanvPosition.y,32,32)
+        
+        c.drawImage(
+            this.image,
+            this.FrameCurrent.width*(this.image.width/this.frameMax),
+            this.FrameCurrent.height*(this.image.height/this.frameMax),
+            this.image.width/this.frameMax,
+            this.image.height/this.frameMax, 
+            this.CanvPosition.x+this.offset.x,
+            this.CanvPosition.y+this.offset.y-16,
+            this.image.width/this.frameMax,
+            this.image.height/this.frameMax
+        )
+    }
+    InfoBox({e}) {
+        if (document.querySelector('#InfoBox') == null) {
+            const GBox = document.querySelector('#GameBox')
+            const IBox = document.createElement('div')
+            IBox.style = `
+            position: absolute;
+            width: 100px;
+            height: 40px;
+            left: ${e.layerX - 50}px;
+            top: ${e.layerY - 100}px;
+            background-color: #494a4d;
+            border: double 4px #9a9ca1;
+            color: White;
+            text-align: Center;
+            font-style: italic;
+            `
+            IBox.innerHTML = `${this.NickName}<br>lvl: ${this.lvl} (${this.ClassName})` 
+            IBox.id = 'InfoBox'
+            GBox.appendChild(IBox)
+        }
+    } 
+    GameObjectHitBox({e}) {
+        if (this.CanvPosition.x + this.offset.x <= e.offsetX &&
+            this.CanvPosition.x + this.offset.x + this.width >= e.offsetX &&
+            this.CanvPosition.y + this.offset.y <= e.offsetY &&
+            this.CanvPosition.y + this.offset.y + this.height >= e.offsetY){
+                return true
+        }else{
+            return false
+        }
+    }
+}
+
+class Player extends GameObject {
+    constructor({
+        lvl,
+        CanvPosition,
+        imageSrc,
+        frameMax,
+        ClassName
+    }) {
+        super({
+            lvl,
+            CanvPosition,
+            imageSrc,
+            frameMax,
+            ClassName
+        })
+        this.NickName = 'Sovio'
+        this.lastKey = undefined
+        this.Oncolision = false
+        this.ingo = false
+        this.speed = {
+            x: 0,
+            y: 0
+        }
+        this.RelativePosition = {
+            x: this.CanvPosition.x,
+            y: this.CanvPosition.y
+        }
+    }
     mapMoveX({obj,position={}}) {
         this.RelativePosition.x += position.x
         obj.offset.x -= position.x
+        enemys[0].offset.x -= position.x
+        //enemy.offset.x -= position.x
         
     }
     mapMoveY({obj,position={}}) {
         this.RelativePosition.y += position.y
         obj.offset.y -= position.y
+        enemys[0].offset.y -= position.y
+        //enemy.offset.y -= position.y
     }
 
     playerMoveX({speed = {}}) {
@@ -163,16 +191,6 @@ class Player extends Sprite {
     }
 
     SCollisions ({obj,speed={}, x=1, key = null}) {
-        //
-        //console.log(this.RelativePosition.y-speed.y > 0)
-
-        /* obj.collisions[3].x + obj.collisions[3].width <= this.RelativePosition.x + speed.x ||
-                this.RelativePosition.x + this.width + this.speed.x <= obj.collisions[3].x  WORK*/
-
-        /* obj.collisions[3].y >= this.RelativePosition.y + this.height + speed.y ||  */
-
-
-
         if((this.RelativePosition.x + speed.x >= 0 && 
             this.RelativePosition.x + this.width + speed.x <= obj.image.width) && 
             (this.RelativePosition.y+speed.y >= 0 && 
@@ -222,23 +240,37 @@ class Player extends Sprite {
                 }, 25);
         }
     } 
-    InfoBox() {
-
-    }    
+}
+class Enemy extends GameObject {
+    constructor({
+        lvl,
+        CanvPosition,
+        imageSrc,
+        frameMax,
+        offset,
+        ClassName,
+    }){
+        super({
+            lvl,
+            CanvPosition,
+            imageSrc,
+            frameMax,
+            ClassName
+        })
+        this.offset = offset
+        this.NickName = 'Rat'
+    }
 }
 
 
-
-
-
 class BattleBox {
-    constructor(){`1`
+    constructor(){
         this.Position = {}
         this.RelativePosition = {}
         
     }
     Create() {
-        const GBox = document.querySelector('#GameBox')
+        //const GBox = document.querySelector('#GameBox')
         const FBox = document.createElement('div')
         FBox.id = 'FightBox'
         FBox.style = `
@@ -248,9 +280,6 @@ class BattleBox {
         right: 0;
         bottom: 0;
         margin: auto;
-        margin-left: 15%;
-        margin-right: auto !important;
-        display: block;
         background-color: red;
         width: ${canv.width*0.90}px;
         height: ${canv.height*0.90}px
