@@ -34,16 +34,31 @@ animation()
 
 canv.addEventListener('mousemove', (e) => {
     for (const [key, value] of Object.entries(enemys)) {
-        if(obj.GameObjectHitBox({e:e})){
+        if(obj.GameObjectsHitBox({e:e})){
             obj.InfoBox({e:e})
             break
-        }else if (value.GameObjectHitBox({e:e})) {
+        }else if (value.GameObjectsHitBox({e:e})) {
             value.InfoBox({e:e})
         }else{
             if (document.querySelector('#InfoBox') != null) {
                 document.querySelector('#InfoBox').remove()
             }
         }
+    }
+})
+
+canv.addEventListener('click', (e) => {
+    for (const [key, value] of Object.entries(enemys)) {
+        if ((obj.RelativePosition.x - value.offset.x === 32 || 
+            obj.RelativePosition.y - value.offset.y === 32) &&(
+            obj.RelativePosition.x - value.offset.x === -32 ||
+            obj.RelativePosition.y - value.offset.y === -32)
+            ){
+            console.log('x')
+        }
+            if (value.GameObjectsHitBox({e:e})) {
+            
+            }  
     }
 })
 

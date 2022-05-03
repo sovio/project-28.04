@@ -13,11 +13,11 @@ class Sprite {
             width: 0,
             height: 0
         }
-        }
+    }
 
-        update(){
+    update() {
         this.draw()    
-        }
+    }
 }
 
 class Maps extends Sprite {
@@ -38,14 +38,14 @@ class Maps extends Sprite {
     draw(){
         c.drawImage(
             this.image,
-            this.FrameCurrent.width*(this.image.width/this.frameMax), 
-            this.FrameCurrent.height*(this.image.height/this.frameMax), 
-            this.image.width/this.frameMax, 
-            this.image.height/this.frameMax, 
+            this.FrameCurrent.width * (this.image.width/this.frameMax), 
+            this.FrameCurrent.height * (this.image.height/this.frameMax), 
+            this.image.width / this.frameMax, 
+            this.image.height / this.frameMax, 
             this.CanvPosition.x + this.offset.x, 
             this.CanvPosition.y + this.offset.y, 
-            this.image.width/this.frameMax, 
-            this.image.height/this.frameMax
+            this.image.width / this.frameMax, 
+            this.image.height / this.frameMax
         )
 
         /* for (const [key, value] of Object.entries(this.collisions)) {
@@ -68,28 +68,26 @@ class GameObject extends Sprite {
         ClassName
     }){
         super({
-                CanvPosition,
-                imageSrc,
-                frameMax
-            })
-            this.lvl = lvl
-            this.width = 32
-            this.height = 32
-            this.ClassName = ClassName
+            CanvPosition,
+            imageSrc,
+            frameMax
+        })
+        this.lvl = lvl
+        this.width = 32
+        this.height = 32
+        this.ClassName = ClassName
     }
     draw() {
-        //c.fillRect(this.CanvPosition.x, this.CanvPosition.y,32,32)
-        
         c.drawImage(
             this.image,
-            this.FrameCurrent.width*(this.image.width/this.frameMax),
-            this.FrameCurrent.height*(this.image.height/this.frameMax),
-            this.image.width/this.frameMax,
-            this.image.height/this.frameMax, 
-            this.CanvPosition.x+this.offset.x,
-            this.CanvPosition.y+this.offset.y-16,
-            this.image.width/this.frameMax,
-            this.image.height/this.frameMax
+            this.FrameCurrent.width * (this.image.width/this.frameMax),
+            this.FrameCurrent.height * (this.image.height/this.frameMax),
+            this.image.width / this.frameMax,
+            this.image.height / this.frameMax, 
+            this.CanvPosition.x + this.offset.x,
+            this.CanvPosition.y + this.offset.y-16,
+            this.image.width / this.frameMax,
+            this.image.height / this.frameMax
         )
     }
     InfoBox({e}) {
@@ -113,15 +111,14 @@ class GameObject extends Sprite {
             GBox.appendChild(IBox)
         }
     } 
-    GameObjectHitBox({e}) {
+    GameObjectsHitBox({e}) {
         if (this.CanvPosition.x + this.offset.x <= e.offsetX &&
             this.CanvPosition.x + this.offset.x + this.width >= e.offsetX &&
             this.CanvPosition.y + this.offset.y <= e.offsetY &&
-            this.CanvPosition.y + this.offset.y + this.height >= e.offsetY){
+            this.CanvPosition.y + this.offset.y + this.height >= e.offsetY)
                 return true
-        }else{
+        
             return false
-        }
     }
 }
 
