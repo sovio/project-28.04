@@ -95,16 +95,16 @@ class GameObject extends Sprite {
             const GBox = document.querySelector('#GameBox')
             const IBox = document.createElement('div')
             IBox.style = `
-            position: absolute;
-            width: 100px;
-            height: 40px;
-            left: ${e.layerX - 50}px;
-            top: ${e.layerY - 100}px;
-            background-color: #494a4d;
-            border: double 4px #9a9ca1;
-            color: White;
-            text-align: Center;
-            font-style: italic;
+                position: absolute;
+                width: 100px;
+                height: 40px;
+                left: ${e.layerX - 50}px;
+                top: ${e.layerY - 100}px;
+                background-color: #494a4d;
+                border: double 4px #9a9ca1;
+                color: White;
+                text-align: Center;
+                font-style: italic;
             `
             IBox.innerHTML = `${this.NickName}<br>lvl: ${this.lvl} (${this.ClassName})` 
             IBox.id = 'InfoBox'
@@ -255,7 +255,7 @@ class Enemy extends GameObject {
             ClassName
         })
         this.offset = offset
-        this.NickName = 'Rat'
+        this.NickName = 'Szczur'
     }
 }
 
@@ -266,21 +266,59 @@ class BattleBox {
         this.RelativePosition = {}
         
     }
-    Create() {
+    Create({o={}}) {
         //const GBox = document.querySelector('#GameBox')
         const FBox = document.createElement('div')
         FBox.id = 'FightBox'
         FBox.style = `
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-        background-color: red;
-        width: ${canv.width*0.90}px;
-        height: ${canv.height*0.90}px
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            background-color: red;
+            width: ${canv.width*0.90}px;
+            height: ${canv.height*0.90}px
         `
         canv.before(FBox)
+
+        const LogBox = document.createElement('div')
+        LogBox.id = 'LogBox'
+        LogBox.style = `
+            top: 60%;
+            width: 40%;
+            height: 40%;
+            position: absolute;
+            background-color: green;
+        `
+        FBox.appendChild(LogBox)
+
+        const LogRow = document.createElement('div')
+        LogRow.id = 'StartRow'
+        LogRow.style= `
+            width: 100%;
+            height: 20%;
+            background-color: #383b39;
+            text-align: center;
+            font-style: italic;
+        `
+        LogRow.innerHTML = `Rozpoczęła się walka pomiędzy ${o.attacker.NickName}(${o.attacker.ClassName}) a ${o.enemy.NickName}(${o.enemy.ClassName})`
+        LogBox.appendChild(LogRow)
+       
+        const ChoseBox = document.createElement('div')
+        ChoseBox.id = 'ChoseBox'
+        ChoseBox.style = `
+            top: 60%;
+            left: 40%;
+            width: 60%;
+            height: 40%;
+            position: absolute;
+            background-color: blue;
+        `
+        FBox.appendChild(ChoseBox)
+
+
+
     }
 }
