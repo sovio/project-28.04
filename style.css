@@ -12,3 +12,24 @@ canvas {
     margin-right: auto;
     display: block;
 }
+.Btn{
+  background-color: red;
+  border: double 2px black;
+  border-radius: 100px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  min-height: 40px;
+  min-width: 0px;
+  transition: background-color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, box-shadow 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s, color 0.167s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+}
+
+.Btn:hover,
+.Btn-18:focus { 
+  background-color: #8d1010;
+
+}
+.Btn:disabled { 
+  background: rgba(0, 0, 0, .08);
+  color: rgba(0, 0, 0, .3);
+}

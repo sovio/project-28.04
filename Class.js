@@ -121,8 +121,29 @@ class GameObject extends Sprite {
             return false
     }
 }
-
-class Player extends GameObject {
+class Mage extends GameObject {
+    constructor({
+        lvl,
+        CanvPosition,
+        imageSrc,
+        frameMax,
+        ClassName
+    }){
+        super({
+            lvl,
+            CanvPosition,
+            imageSrc,
+            frameMax,
+            ClassName
+        })
+        this.BasicIntelect = 10;
+        this.BasicHP = 100;
+    }
+    FireBall(){
+        
+    }
+}
+class Player extends Mage {
     constructor({
         lvl,
         CanvPosition,
@@ -258,8 +279,6 @@ class Enemy extends GameObject {
         this.NickName = 'Szczur'
     }
 }
-
-
 class BattleBox {
     constructor(){
         this.Position = {}
@@ -281,8 +300,7 @@ class BattleBox {
             width: ${canv.width*0.90}px;
             height: ${canv.height*0.90}px
         `
-        canv.before(FBox)
-
+        
         const LogBox = document.createElement('div')
         LogBox.id = 'LogBox'
         LogBox.style = `
@@ -292,10 +310,10 @@ class BattleBox {
             position: absolute;
             background-color: green;
         `
-        FBox.appendChild(LogBox)
-
+        
         const LogRow = document.createElement('div')
         LogRow.id = 'StartRow'
+        LogRow.innerHTML = `Rozpoczęła się walka pomiędzy ${o.attacker.NickName}(${o.attacker.ClassName}) a ${o.enemy.NickName}(${o.enemy.ClassName})`
         LogRow.style= `
             width: 100%;
             height: 20%;
@@ -303,22 +321,88 @@ class BattleBox {
             text-align: center;
             font-style: italic;
         `
-        LogRow.innerHTML = `Rozpoczęła się walka pomiędzy ${o.attacker.NickName}(${o.attacker.ClassName}) a ${o.enemy.NickName}(${o.enemy.ClassName})`
-        LogBox.appendChild(LogRow)
-       
+        
         const ChoseBox = document.createElement('div')
         ChoseBox.id = 'ChoseBox'
         ChoseBox.style = `
+        top: 60%;
+        left: 70%;
+        width: 30%;
+        height: 40%;
+        position: absolute;
+        background-color: blue;
+    `
+
+        FBox.appendChild(ChoseBox)
+        const SkillBox = document.createElement('div')
+        const line = document.createElement('div')
+        SkillBox.id = 'SkillBox'
+        line.style=`
+            width: 100%;
+            height: 81%;
+            border-bottom: 1px solid black;
+            position: absolute;
+        `
+        SkillBox.style = `
+            position: absolute;
             top: 60%;
             left: 40%;
-            width: 60%;
+            width: 50%;
             height: 40%;
-            position: absolute;
-            background-color: blue;
+            width: 30%;
+            background-color: orange;
         `
-        FBox.appendChild(ChoseBox)
+       
+    SkillBox.appendChild(line)
 
+        const BtnChose = document.createElement('button')
+        BtnChose.id = 'BtnChose'
+        BtnChose.className = 'Btn'
+        BtnChose.innerHTML = 'Wybierz'
+        BtnChose.style = `
+        position: absolute;
+        font-style: italic;
+        top: 81%;
+        right: 0;
+        `
 
+        const BtnClose = document.createElement('button')
+        BtnClose.id = 'BtnClose'
+        BtnClose.innerHTML = 'Zamknij'
+        BtnClose.className = 'Btn'
+        BtnClose.style = `
+            position: absolute;
+            display: block;
+            width: 40%;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            top: 25%;
+            font-style: italic;
+        `
 
+        const BtnInfo = document.createElement('button')
+        BtnInfo.innerHTML = 'Informacje'
+        BtnInfo.className = 'Btn'
+        BtnInfo.style = `
+            position: absolute;
+            display: block;
+            width: 40%;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            top: 60%;
+            font-style: italic;
+        `
+
+        canv.before(FBox)
+        FBox.appendChild(LogBox)
+        LogBox.appendChild(LogRow)
+        FBox.appendChild(SkillBox)
+        ChoseBox.appendChild(BtnClose)
+        ChoseBox.appendChild(BtnInfo)
+        SkillBox.appendChild(BtnChose)
     }
 }
