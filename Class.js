@@ -76,6 +76,7 @@ class GameObject extends Sprite {
         this.width = 32
         this.height = 32
         this.ClassName = ClassName
+        this.InBattle = false
     }
     draw() {
         c.drawImage(
@@ -138,9 +139,10 @@ class Mage extends GameObject {
         })
         this.BasicIntelect = 10;
         this.BasicHP = 100;
-    }
-    FireBall(){
-        
+        this.Skills = {
+            FireBall: () => {console.log("Walę FireBalem")},
+            FrostBall: () => {console.log("Walę FrostBalem")} 
+        }
     }
 }
 class Player extends Mage {
@@ -174,14 +176,20 @@ class Player extends Mage {
     mapMoveX({obj,position={}}) {
         this.RelativePosition.x += position.x
         obj.offset.x -= position.x
-        enemys[0].offset.x -= position.x
+        for (const [key, value] of Object.entries(enemys)){
+            value.offset.x -= position.x
+        }
+        //enemys[0].offset.x -= position.x
         //enemy.offset.x -= position.x
         
     }
     mapMoveY({obj,position={}}) {
         this.RelativePosition.y += position.y
         obj.offset.y -= position.y
-        enemys[0].offset.y -= position.y
+        for (const [key, value] of Object.entries(enemys)){
+            value.offset.y -= position.y
+        }
+        //enemys[0].offset.y -= position.y
         //enemy.offset.y -= position.y
     }
 
@@ -303,35 +311,13 @@ class BattleBox {
         
         const LogBox = document.createElement('div')
         LogBox.id = 'LogBox'
-        LogBox.style = `
-            top: 60%;
-            width: 40%;
-            height: 40%;
-            position: absolute;
-            background-color: green;
-        `
         
-        const LogRow = document.createElement('div')
-        LogRow.id = 'StartRow'
-        LogRow.innerHTML = `Rozpoczęła się walka pomiędzy ${o.attacker.NickName}(${o.attacker.ClassName}) a ${o.enemy.NickName}(${o.enemy.ClassName})`
-        LogRow.style= `
-            width: 100%;
-            height: 20%;
-            background-color: #383b39;
-            text-align: center;
-            font-style: italic;
-        `
+        const StartRow = document.createElement('div')
+        StartRow.id = 'StartRow'
+        StartRow.innerHTML = `Rozpoczęła się walka pomiędzy ${o.attacker.NickName}(${o.attacker.ClassName}) a ${o.enemy.NickName}(${o.enemy.ClassName})`
         
         const ChoseBox = document.createElement('div')
         ChoseBox.id = 'ChoseBox'
-        ChoseBox.style = `
-        top: 60%;
-        left: 70%;
-        width: 30%;
-        height: 40%;
-        position: absolute;
-        background-color: blue;
-    `
 
         FBox.appendChild(ChoseBox)
         const SkillBox = document.createElement('div')
@@ -343,15 +329,13 @@ class BattleBox {
             border-bottom: 1px solid black;
             position: absolute;
         `
-        SkillBox.style = `
-            position: absolute;
-            top: 60%;
-            left: 40%;
-            width: 50%;
-            height: 40%;
-            width: 30%;
-            background-color: orange;
-        `
+        const ul = document.createElement('ul')
+        SkillBox.appendChild(ul)
+        for (const [key, value] of Object.entries(obj.Skills)) {
+            const x = document.createElement('ul')
+            x.innerHTML = `${key}`
+            ul.appendChild(x)
+        }
        
     SkillBox.appendChild(line)
 
@@ -360,8 +344,6 @@ class BattleBox {
         BtnChose.className = 'Btn'
         BtnChose.innerHTML = 'Wybierz'
         BtnChose.style = `
-        position: absolute;
-        font-style: italic;
         top: 81%;
         right: 0;
         `
@@ -370,36 +352,38 @@ class BattleBox {
         BtnClose.id = 'BtnClose'
         BtnClose.innerHTML = 'Zamknij'
         BtnClose.className = 'Btn'
+        BtnClose.addEventListener('click',(e) => {
+            !o.attacker.InBattle? FBox.remove(): false
+        })
         BtnClose.style = `
-            position: absolute;
-            display: block;
             width: 40%;
             left: 0;
             right: 0;
             margin-left: auto;
             margin-right: auto;
             top: 25%;
-            font-style: italic;
         `
 
         const BtnInfo = document.createElement('button')
         BtnInfo.innerHTML = 'Informacje'
         BtnInfo.className = 'Btn'
+        BtnInfo.addEventListener('click', (e) => {
+            console.log('Do zrobienia alert z informacjami')
+            //Alert z informacjami
+        })
         BtnInfo.style = `
-            position: absolute;
-            display: block;
             width: 40%;
             left: 0;
             right: 0;
             margin-left: auto;
             margin-right: auto;
             top: 60%;
-            font-style: italic;
+            
         `
 
         canv.before(FBox)
         FBox.appendChild(LogBox)
-        LogBox.appendChild(LogRow)
+        LogBox.appendChild(StartRow)
         FBox.appendChild(SkillBox)
         ChoseBox.appendChild(BtnClose)
         ChoseBox.appendChild(BtnInfo)

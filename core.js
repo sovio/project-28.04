@@ -281,8 +281,8 @@ const obj = new Player({
         }
     })
 }  
-const FightBox = new BattleBox()
-    FightBox.Create({o: {attacker: obj, enemy: enemys[0]}})
+/* const FightBox = new BattleBox()
+    FightBox.Create({o: {attacker: obj, enemy: enemys[0]}}) */
 /* const enemy = new Enemy({
     lvl: 1,
     imageSrc: 'img/enemy.gif',

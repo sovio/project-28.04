@@ -22,13 +22,11 @@ function animation() {
         
     c.clearRect(0,0,canv.width,canv.height)
     map.update()
-    enemys[0].update()
-    //enemy.update()
+    for (const [key, value] of Object.entries(enemys)) {
+        value.update()
+    }
     obj.update()
-    
-
     go()
-
 }
 animation()
 
@@ -44,26 +42,6 @@ canv.addEventListener('mousemove', (e) => {
                 document.querySelector('#InfoBox').remove()
             }
         }
-    }
-})
-
-canv.addEventListener('click', (e) => {
-    for (const [key, value] of Object.entries(enemys)) {
-        if ((obj.RelativePosition.x - value.offset.x === 32 && 
-            obj.RelativePosition.y - value.offset.y === 0) ||
-            (obj.RelativePosition.x - value.offset.x === -32 &&
-            obj.RelativePosition.y - value.offset.y === 0) ||
-            (obj.RelativePosition.x - value.offset.x === 0 &&
-            obj.RelativePosition.y - value.offset.y === 32) ||
-            (obj.RelativePosition.x - value.offset.x === 0 &&
-            obj.RelativePosition.y - value.offset.y === -32)
-            ){
-                /* const FightBox = new BattleBox()
-                FightBox.Create() */
-        }
-            if (value.GameObjectsHitBox({e:e})) {
-            
-            }  
     }
 })
 
