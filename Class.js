@@ -291,8 +291,19 @@ class BattleBox {
     constructor(){
         this.Position = {}
         this.RelativePosition = {}
-        
     }
+    SetSkill({obj}){
+        obj.style=`
+            border: 2px solid white;
+            background-color: yellow;
+        `
+    }
+
+    BtnChoseF(){
+        console.log(document.querySelectorAll('.LabelBox'))
+        console.log(document.querySelectorAll())
+    }
+
     Create({o={}}) {
         //const GBox = document.querySelector('#GameBox')
         const FBox = document.createElement('div')
@@ -325,27 +336,41 @@ class BattleBox {
         SkillBox.id = 'SkillBox'
         line.style=`
             width: 100%;
-            height: 81%;
+            bottom: 18.5%;
             border-bottom: 1px solid black;
             position: absolute;
         `
-        const ul = document.createElement('ul')
-        SkillBox.appendChild(ul)
+        const RadioBar = document.createElement('div')
+        RadioBar.className = 'RadioBar'
+        SkillBox.appendChild(RadioBar)
         for (const [key, value] of Object.entries(obj.Skills)) {
-            const x = document.createElement('ul')
-            x.innerHTML = `${key}`
-            ul.appendChild(x)
+            const x = document.createElement('input')
+            x.type = 'radio'
+            x.className = 'RadioBox'
+            x.id = key
+            x.name = 'SkillShot'
+            const y = document.createElement('label')
+            y.LFunction = value
+            y.name = key 
+            y.className = `LabelBox`
+            y.htmlFor = key
+            y.innerHTML = key
+            RadioBar.appendChild(x)
+            RadioBar.appendChild(y)
         }
-       
-    SkillBox.appendChild(line)
+        
+        SkillBox.appendChild(line)
 
         const BtnChose = document.createElement('button')
         BtnChose.id = 'BtnChose'
         BtnChose.className = 'Btn'
         BtnChose.innerHTML = 'Wybierz'
+        BtnChose.addEventListener('click',() => {
+            this.BtnChoseF()
+        })
         BtnChose.style = `
-        top: 81%;
-        right: 0;
+            top: 81%;
+            right: 0;
         `
 
         const BtnClose = document.createElement('button')
