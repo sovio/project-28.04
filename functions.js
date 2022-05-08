@@ -30,6 +30,12 @@ function animation() {
 }
 animation()
 
+function RandomNumberGenerator(min,max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 canv.addEventListener('mousemove', (e) => {
     for (const [key, value] of Object.entries(enemys)) {
         if(obj.GameObjectsHitBox({e:e})){

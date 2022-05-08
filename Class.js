@@ -48,14 +48,14 @@ class Maps extends Sprite {
             this.image.height / this.frameMax
         )
 
-        /* for (const [key, value] of Object.entries(this.collisions)) {
+       /*   for (const [key, value] of Object.entries(this.collisions)) {
             c.fillRect(
                 value.x + this.offset.x,
                 value.y + this.offset.y,
                 value.width,
                 value.height
             ) 
-        } */
+        }  */
     }
 }
 
@@ -77,6 +77,9 @@ class GameObject extends Sprite {
         this.height = 32
         this.ClassName = ClassName
         this.InBattle = false
+        this.Skills = {
+            BasicAttack: () => {console.log("Walę Basicem")} 
+        }
     }
     draw() {
         c.drawImage(
@@ -122,6 +125,38 @@ class GameObject extends Sprite {
             return false
     }
 }
+
+class Warrior extends GameObject{
+    constructor({
+        lvl,
+        CanvPosition,
+        imageSrc,
+        frameMax,
+        ClassName
+    }){
+        super({
+            lvl,
+            CanvPosition,
+            imageSrc,
+            frameMax,
+            ClassName
+        })
+        this.BasicIntelect = 0;
+        this.BasicStrange = 10;
+        this.BasicAgility = 3
+        this.BasicDodge = 3;
+        this.BasicArmon = 6;
+        this.BasicResists = {
+            Fire: 0.32,
+            Frost: 0.12,
+            Lightning: 0.02,
+            Poison: 0.42
+        }
+        this.BasicHP = 100;
+        this.TrueHP = this.BasicHP
+        this.Skills
+    }
+}
 class Mage extends GameObject {
     constructor({
         lvl,
@@ -138,13 +173,42 @@ class Mage extends GameObject {
             ClassName
         })
         this.BasicIntelect = 10;
-        this.BasicHP = 100;
-        this.Skills = {
-            FireBall: () => {console.log("Walę FireBalem")},
-            FrostBall: () => {console.log("Walę FrostBalem")} 
+        this.BasicStrange = 1;
+        this.BasicAgility = 2
+        this.BasicDodge = 5;
+        this.BasicArmon = 0;
+        this.BasicResists = {
+            Fire: 0.62,
+            Frost: 0.54,
+            Lightning: 0.21,
+            Poison: 0.9
         }
+        this.BasicHP = 100;
+        this.TrueHP = this.BasicHP
+
+        this.Skills = Object.assign({}, this.Skills, {
+            FireBall: ({Enemy}) => {
+                let AValue = this.BasicIntelect + RandomNumberGenerator(1,11)
+                AValue = Math.round(AValue - Enemy.BasicResists.Fire * AValue)
+                Enemy.TrueHP -= AValue
+                let EnemyPrcentHP = Math.round(Enemy.TrueHP / Enemy.BasicHP * 100)
+                let PlayerPrcentHP = Math.round(this.TrueHP / this.BasicHP * 100)
+                const content = `${this.NickName}(${PlayerPrcentHP}%) zadał <span style = 'color: red'>${AValue}</span> obrażeń  postaci ${Enemy.NickName}(${EnemyPrcentHP}%)`
+                FightBox.ActionWindow({content: content})
+            },
+            FrostBall: ({Enemy}) => {
+                let AValue = this.BasicIntelect + RandomNumberGenerator(1,11)
+                AValue = Math.round(AValue - Enemy.BasicResists.Frost * AValue)
+                Enemy.TrueHP -= AValue
+                let EnemyPrcentHP = Math.round(Enemy.TrueHP / Enemy.BasicHP * 100)
+                let PlayerPrcentHP = Math.round(this.TrueHP / this.BasicHP * 100)
+                const content = `${this.NickName}(${PlayerPrcentHP}%) zadał <span style = 'color: rgb(28, 159, 192)'>${AValue}</span> obrażeń postaci ${Enemy.NickName}(${EnemyPrcentHP}%)`
+                FightBox.ActionWindow({content: content})
+            } 
+        })
     }
 }
+
 class Player extends Mage {
     constructor({
         lvl,
@@ -179,18 +243,14 @@ class Player extends Mage {
         for (const [key, value] of Object.entries(enemys)){
             value.offset.x -= position.x
         }
-        //enemys[0].offset.x -= position.x
-        //enemy.offset.x -= position.x
-        
     }
+
     mapMoveY({obj,position={}}) {
         this.RelativePosition.y += position.y
         obj.offset.y -= position.y
         for (const [key, value] of Object.entries(enemys)){
             value.offset.y -= position.y
         }
-        //enemys[0].offset.y -= position.y
-        //enemy.offset.y -= position.y
     }
 
     playerMoveX({speed = {}}) {
@@ -267,7 +327,7 @@ class Player extends Mage {
         }
     } 
 }
-class Enemy extends GameObject {
+class Enemy extends Warrior {
     constructor({
         lvl,
         CanvPosition,
@@ -288,20 +348,36 @@ class Enemy extends GameObject {
     }
 }
 class BattleBox {
-    constructor(){
+    constructor () { 
         this.Position = {}
         this.RelativePosition = {}
     }
-    SetSkill({obj}){
-        obj.style=`
-            border: 2px solid white;
-            background-color: yellow;
-        `
+
+    ActionWindow({content}) {
+        //console.log(LogBox)
+        const x = document.createElement('div')
+        x.className = 'LogRow'
+        x.innerHTML = content  
+        LogBox.appendChild(x)
+        LogBox.scrollTo(0, 1000000);
     }
 
-    BtnChoseF(){
-        console.log(document.querySelectorAll('.LabelBox'))
-        console.log(document.querySelectorAll())
+    BtnChooseF({o}) {
+        let varrible = false
+        document.querySelectorAll('.RadioBox').forEach((e) => {
+            if (e.checked) {
+                document.querySelectorAll('.LabelBox').forEach((e1) => {
+                    if (e.id === e1.attributes.for.nodeValue) {
+                        varrible = true
+                        e1.LFunction({Enemy: o.enemy})
+                    }
+                })
+            }
+        })
+        //okienko z informacją wybierz spell
+        !varrible ? console.log('okienko z informacja wybierz spell') : false
+        ;
+        
     }
 
     Create({o={}}) {
@@ -315,11 +391,25 @@ class BattleBox {
             right: 0;
             bottom: 0;
             margin: auto;
-            background-color: red;
+            
             width: ${canv.width*0.90}px;
-            height: ${canv.height*0.90}px
+            height: ${canv.height*0.90}px;
+            border-radius: 10%
         `
-        
+        canv.before(FBox)
+
+        const BCharBox = document.createElement('div')
+        BCharBox.id = 'BCharBox'
+        FBox.appendChild(BCharBox)
+        BCharBox.style = `
+            width: 100%;
+            height: 60%;
+            background-color: pink;
+            content:url(img/BattleBackgorund.jpg);
+            border-top-left-radius: 15%;
+            border-top-right-radius: 15%;
+        `
+
         const LogBox = document.createElement('div')
         LogBox.id = 'LogBox'
         
@@ -327,16 +417,16 @@ class BattleBox {
         StartRow.id = 'StartRow'
         StartRow.innerHTML = `Rozpoczęła się walka pomiędzy ${o.attacker.NickName}(${o.attacker.ClassName}) a ${o.enemy.NickName}(${o.enemy.ClassName})`
         
-        const ChoseBox = document.createElement('div')
-        ChoseBox.id = 'ChoseBox'
+        const ChooseBox = document.createElement('div')
+        ChooseBox.id = 'ChooseBox'
 
-        FBox.appendChild(ChoseBox)
+        FBox.appendChild(ChooseBox)
         const SkillBox = document.createElement('div')
         const line = document.createElement('div')
         SkillBox.id = 'SkillBox'
         line.style=`
             width: 100%;
-            bottom: 18.5%;
+            bottom: 19%;
             border-bottom: 1px solid black;
             position: absolute;
         `
@@ -361,19 +451,25 @@ class BattleBox {
         
         SkillBox.appendChild(line)
 
-        const BtnChose = document.createElement('button')
-        BtnChose.id = 'BtnChose'
-        BtnChose.className = 'Btn'
-        BtnChose.innerHTML = 'Wybierz'
-        BtnChose.addEventListener('click',() => {
-            this.BtnChoseF()
+        const BtnChoose = document.createElement('div')
+
+        BtnChoose.id = 'BtnChoose'
+        BtnChoose.innerHTML = `<h3 class='BtnH3'>WYBIERZ</h3> <img src='img/button/normal.png' class='BtnImg'> `
+        BtnChoose.addEventListener('click',() => {
+            this.BtnChooseF({o:o})
         })
-        BtnChose.style = `
-            top: 81%;
-            right: 0;
+        BtnChoose.style = `
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 56%;
         `
 
-        const BtnClose = document.createElement('button')
+        const TimerBox = document.createElement('div')
+        TimerBox.id = 'TimerBox'
+        TimerBox.innerHTML = '15'
+
+        const BtnClose = document.createElement('div')
         BtnClose.id = 'BtnClose'
         BtnClose.innerHTML = 'Zamknij'
         BtnClose.className = 'Btn'
@@ -381,7 +477,6 @@ class BattleBox {
             !o.attacker.InBattle? FBox.remove(): false
         })
         BtnClose.style = `
-            width: 40%;
             left: 0;
             right: 0;
             margin-left: auto;
@@ -389,7 +484,7 @@ class BattleBox {
             top: 25%;
         `
 
-        const BtnInfo = document.createElement('button')
+        const BtnInfo = document.createElement('div')
         BtnInfo.innerHTML = 'Informacje'
         BtnInfo.className = 'Btn'
         BtnInfo.addEventListener('click', (e) => {
@@ -397,7 +492,6 @@ class BattleBox {
             //Alert z informacjami
         })
         BtnInfo.style = `
-            width: 40%;
             left: 0;
             right: 0;
             margin-left: auto;
@@ -406,12 +500,14 @@ class BattleBox {
             
         `
 
-        canv.before(FBox)
+        
         FBox.appendChild(LogBox)
         LogBox.appendChild(StartRow)
         FBox.appendChild(SkillBox)
-        ChoseBox.appendChild(BtnClose)
-        ChoseBox.appendChild(BtnInfo)
-        SkillBox.appendChild(BtnChose)
+        ChooseBox.appendChild(BtnClose)
+        ChooseBox.appendChild(BtnInfo)
+        SkillBox.appendChild(TimerBox)
+        SkillBox.appendChild(BtnChoose)
+        //SkillBox.appendChild(BtnChooseTittle)
     }
 }

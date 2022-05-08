@@ -283,6 +283,9 @@ const obj = new Player({
 }  
  const FightBox = new BattleBox()
     FightBox.Create({o: {attacker: obj, enemy: enemys[0]}}) 
+    window.onload = () => {
+        StartTimer()
+      };
 /* const enemy = new Enemy({
     lvl: 1,
     imageSrc: 'img/enemy.gif',
