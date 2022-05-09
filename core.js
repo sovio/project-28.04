@@ -263,7 +263,6 @@ const map = new Maps({
 
 const obj = new Player({
     lvl: 10,
-    ClassName: 'M',
     CanvPosition: {
         x: 0,
         y: 64
@@ -272,7 +271,6 @@ const obj = new Player({
 })
   const enemys = {
     0: new Enemy({
-        ClassName: 'W',
         lvl: 1,
         imageSrc: 'img/enemy.gif',
         offset: {
@@ -281,17 +279,8 @@ const obj = new Player({
         }
     })
 }  
- const FightBox = new BattleBox()
-    FightBox.Create({o: {attacker: obj, enemy: enemys[0]}}) 
-    window.onload = () => {
-        StartTimer()
-      };
-/* const enemy = new Enemy({
-    lvl: 1,
-    imageSrc: 'img/enemy.gif',
-    offset: {
-        x: 224,
-        y: 96
-    }
-}) */
 
+window.onload = () => {
+    Create({o: {attacker: obj, enemy: enemys[0]}})
+    StartTimer()
+  };
