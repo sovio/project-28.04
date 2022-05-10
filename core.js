@@ -261,7 +261,8 @@ const map = new Maps({
     }
 })
 
-const obj = new Player({
+const hero = new Player({
+    ObjID: 1,
     lvl: 10,
     CanvPosition: {
         x: 0,
@@ -271,6 +272,7 @@ const obj = new Player({
 })
   const enemys = {
     0: new Enemy({
+        ObjID: 2,
         lvl: 1,
         imageSrc: 'img/enemy.gif',
         offset: {
@@ -280,7 +282,9 @@ const obj = new Player({
     })
 }  
 
-window.onload = () => {
-    Create({o: {attacker: obj, enemy: enemys[0]}})
+  window.onload = () => {
+    Create({o: {attacker: hero, enemy: enemys[0]}})
     StartTimer()
+    //hero.InBattle = true
+    //enemys[0].InBattle = true
   };

@@ -1,18 +1,18 @@
 function go() {
-    obj.Oncolision = true
-    if (!obj.ingo) {    
-        if (keys.d.pressed && obj.lastKey === 'd') {
-            obj.FrameCurrent.height = 2
-            obj.SCollisions({obj:map, speed:{x:2,y:0},key:'d'})
-        } else if (keys.a.pressed && obj.lastKey === 'a') {
-            obj.FrameCurrent.height = 1
-            obj.SCollisions({obj:map, speed:{x:-2,y:0},key:'a'})
-        } else if (keys.w.pressed && obj.lastKey === 'w') {
-            obj.FrameCurrent.height = 3
-            obj.SCollisions({obj:map, speed:{x:0,y:-2},key:'w'})
-        } else if (keys.s.pressed && obj.lastKey === 's') {
-            obj.FrameCurrent.height = 0
-            obj.SCollisions({obj:map, speed:{x:0,y:2},key:'s'})
+    hero.Oncolision = true
+    if (!hero.ingo) {    
+        if (keys.d.pressed && hero.lastKey === 'd') {
+            hero.FrameCurrent.height = 2
+            hero.SCollisions({obj:map, speed:{x:2,y:0},key:'d'})
+        } else if (keys.a.pressed && hero.lastKey === 'a') {
+            hero.FrameCurrent.height = 1
+            hero.SCollisions({obj:map, speed:{x:-2,y:0},key:'a'})
+        } else if (keys.w.pressed && hero.lastKey === 'w') {
+            hero.FrameCurrent.height = 3
+            hero.SCollisions({obj:map, speed:{x:0,y:-2},key:'w'})
+        } else if (keys.s.pressed && hero.lastKey === 's') {
+            hero.FrameCurrent.height = 0
+            hero.SCollisions({obj:map, speed:{x:0,y:2},key:'s'})
         } 
     }
 }
@@ -23,9 +23,10 @@ function animation() {
     c.clearRect(0,0,canv.width,canv.height)
     map.update()
     for (const [key, value] of Object.entries(enemys)) {
-        value.update()
+        !value.IsDead ? value.update():false
+        
     }
-    obj.update()
+    hero.update()
     go()
 }
 animation()
@@ -38,11 +39,12 @@ function RandomNumberGenerator(min,max) {
 
 canv.addEventListener('mousemove', (e) => {
     for (const [key, value] of Object.entries(enemys)) {
-        if(obj.GameObjectsHitBox({e:e})){
-            obj.InfoBox({e:e})
+        if(hero.GameObjectsHitBox({e:e})){
+            hero.InfoBox({e:e})
             break
-        }else if (value.GameObjectsHitBox({e:e})) {
+        }else if (value.GameObjectsHitBox({e:e}) && !value.IsDead) {
             value.InfoBox({e:e})
+            break
         }else{
             if (document.querySelector('#InfoBox') != null) {
                 document.querySelector('#InfoBox').remove()
@@ -51,22 +53,29 @@ canv.addEventListener('mousemove', (e) => {
     }
 })
 
+function AlertWindow() {
+    const x = document.createElement('div')
+    x.id = 'AlertWindow'
+    x.innerHTML = `<h2>OSTRZEŻENIE</h2>  Nie wybrano umiejętności!`
+    document.querySelector('#GameBox').appendChild(x)
+}
+
 window.addEventListener('keydown', (e) => {
     switch (e.key) {
         case 'd':
-            obj.lastKey = 'd'
+            hero.lastKey = 'd'
             keys.d.pressed = true
             break
         case 'a':
-            obj.lastKey = 'a'
+            hero.lastKey = 'a'
             keys.a.pressed = true
             break
         case 'w':
-            obj.lastKey = 'w'
+            hero.lastKey = 'w'
             keys.w.pressed = true
             break
         case 's':
-            obj.lastKey = 's'
+            hero.lastKey = 's'
             keys.s.pressed = true
             break
     }
@@ -74,19 +83,19 @@ window.addEventListener('keydown', (e) => {
 window.addEventListener('keyup', (e) => {
     switch (e.key) {
         case 'd':
-            obj.lastKey = undefined
+            hero.lastKey = undefined
             keys.d.pressed = false
             break
         case 'a':
-            obj.lastKey = undefined
+            hero.lastKey = undefined
             keys.a.pressed = false
             break
         case 'w':
-            obj.lastKey = undefined
+            hero.lastKey = undefined
             keys.w.pressed = false
             break
         case 's':
-            obj.lastKey = undefined
+            hero.lastKey = undefined
             keys.s.pressed = false
             break
     }

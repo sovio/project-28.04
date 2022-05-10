@@ -156,6 +156,27 @@ canvas {
   font-weight: 600;
   text-shadow: 0 0 10px red;
 }
+#AlertWindow {
+  position: absolute;
+  top: 30%;
+  right: 0;
+  left: 0;
+  margin: auto;
+  width: 30%;
+  height: 30%;
+  text-align: center;
+  font-weight: 600;
+  word-wrap: break-word;
+  color: white;
+  background-color: gray;
+  background-image: url('img/WindowBorder.png');
+  background-size: 100% 100%;
+}
+
+#AlertWindow h2 {
+  font-style: italic;
+  font-size: 30px;
+}
 
 .RadioBar {
   position: absolute;

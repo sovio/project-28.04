@@ -1,3 +1,5 @@
+let Timer
+
 function Create({o={}}) {
     const FBox = document.createElement('div')
     FBox.id = 'FightBox'
@@ -74,11 +76,12 @@ function Create({o={}}) {
     const RadioBar = document.createElement('div')
     RadioBar.className = 'RadioBar'
     SkillBox.appendChild(RadioBar)
-    for (const [key, value] of Object.entries(obj.Skills)) {
+    for (const [key, value] of Object.entries(hero.Skills)) {
         const x = document.createElement('input')
         x.type = 'radio'
         x.className = 'RadioBox'
         x.id = key
+        key === 'BasicAttack' ? x.checked = 'checked' : false
         x.name = 'SkillShot'
         const y = document.createElement('label')
         y.LFunction = value
@@ -124,6 +127,7 @@ function Create({o={}}) {
     `
     BtnClose.addEventListener('click',(e) => {
         !o.attacker.InBattle? FBox.remove(): false
+        clearInterval(Timer)
     })
     
 
@@ -131,7 +135,13 @@ function Create({o={}}) {
     BtnInfo.innerHTML = `<h3 class='BtnH3'>INFO</h3> <img src='img/button/normal.png' class='BtnImg'> `
     BtnInfo.className = 'Btn'
     BtnInfo.addEventListener('click', (e) => {
-        console.log('Do zrobienia alert z informacjami')
+        //console.log('Do zrobienia alert z informacjami')
+                o.attacker.InBattle = false
+                o.enemy.InBattle = false
+                o.enemy.IsDead = true
+                document.querySelector(`#Enemy_ID${o.enemy.ObjID}`).remove()
+            
+        
         //Alert z informacjami
     })
     BtnInfo.style = `
@@ -156,7 +166,8 @@ function Create({o={}}) {
     SkillBox.appendChild(TimerBox)
     SkillBox.appendChild(BtnChoose)
     
-    CharacterAllocation({o:o})
+    CharacterAllocationPlayer({o:o})
+    CharacterAllocationEnemy({o:o})
 }
 
 function BtnChooseF({o}) {
@@ -171,13 +182,11 @@ function BtnChooseF({o}) {
             })
         }
     })
-    //okienko z informacją wybierz spell
-    !varrible ? console.log('okienko z informacja wybierz spell') : false
+    !varrible ? AlertWindow() : false
     ; 
 }
 
 function ActionWindow({content}) {
-    //console.log(LogBox)
     const x = document.createElement('div')
     x.className = 'LogRow'
     x.innerHTML = content  
@@ -185,8 +194,31 @@ function ActionWindow({content}) {
     LogBox.scrollTo(0, 1000000);
 }
 
-function CharacterAllocation ({o={}}) {
-    console.log(o)
+function CharacterAllocationEnemy ({o={}}) {
+    const y = document.createElement('div')
+    y.id = `Enemy_ID${o.enemy.ObjID}`
+    y.style = `
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 32px;
+    height: 48px;
+    background-image: url(${o.enemy.image.src});
+    background-position: 0px 0px;
+    `
+    y.addEventListener('mousemove', (e) => {
+        o.enemy.InfoBox({e:e})
+    })
+
+    y.addEventListener('mouseleave', () => {
+        document.querySelector('#InfoBox').remove()
+    })
+
+    o.enemy.ClassName === 'Mage' ? document.querySelector('#RangeEnemyPosition').appendChild(y) : document.querySelector('#MeleEnemyPosition').appendChild(y)
+}
+
+function CharacterAllocationPlayer ({o={}}) {
     const x = document.createElement('div')
     x.style = `
         position: absolute;
@@ -202,49 +234,53 @@ function CharacterAllocation ({o={}}) {
         o.attacker.InfoBox({e:e})
     })
 
-    x.addEventListener('mouseleave', (e) => {
+    x.addEventListener('mouseleave', () => {
         document.querySelector('#InfoBox').remove()
     })
 
-    if (o.attacker.ClassName === 'Mage') {
-        console.log(o.attacker.ClassName)
-        document.querySelector('#RangePlayerPosition').appendChild(x)
-    }
+
+    o.attacker.ClassName === 'Mage' ? document.querySelector('#RangePlayerPosition').appendChild(x) : document.querySelector('#MelePlayerPosition').appendChild(x)
+   
 }
 
 function StartTimer() {
     let Time = 15
     
-    let Timer = setInterval(() => {
-        
+    Timer = setInterval(() => {
+        const x = document.querySelector('#TimerBox')   
         Time-=1
-        document.querySelector('#TimerBox').innerHTML = Time
+        x.innerHTML = Time
         Time <= 0 ? clearInterval(Timer):false
     }, 1000);
     
 }
 
 canv.addEventListener('click', (e) => {
-    for (const [key, value] of Object.entries(enemys)) {
-        if ((obj.RelativePosition.x - value.offset.x === 32 && 
-            obj.RelativePosition.y - value.offset.y === 0) ||
-            (obj.RelativePosition.x - value.offset.x === -32 &&
-            obj.RelativePosition.y - value.offset.y === 0) ||
-            (obj.RelativePosition.x - value.offset.x === 0 &&
-            obj.RelativePosition.y - value.offset.y === 32) ||
-            (obj.RelativePosition.x - value.offset.x === 0 &&
-            obj.RelativePosition.y - value.offset.y === -32)
-            ){
-                if(!obj.InBattle || !value.InBattle){
-                    const FightBox = new BattleBox()
-                    Create({o: {attacker: obj, enemy: value}})
-                    StartTimer()
-                    obj.InBattle = true
-                    value.InBattle = true
-                }else{
-                    //Tu będzie Alert box że już jest w walce
-                }
+        for (const [key, value] of Object.entries(enemys)) {
+            if (e.offsetX >= value.offset.x && 
+                e.offsetX <= value.offset.x+32 && 
+                e.offsetY >= value.offset.y && 
+                e.offsetY <= value.offset.y+32) {
+                if ((hero.RelativePosition.x - value.offset.x === 32 && 
+                    hero.RelativePosition.y - value.offset.y === 0) ||
+                    (hero.RelativePosition.x - value.offset.x === -32 &&
+                    hero.RelativePosition.y - value.offset.y === 0) ||
+                    (hero.RelativePosition.x - value.offset.x === 0 &&
+                    hero.RelativePosition.y - value.offset.y === 32) ||
+                    (hero.RelativePosition.x - value.offset.x === 0 &&
+                    hero.RelativePosition.y - value.offset.y === -32)
+                    ){
+                        if (!value.IsDead) {
+                            if (!hero.InBattle || !value.InBattle) {
+                                Create({o: {attacker: hero, enemy: value}})
+                                StartTimer()
+                                hero.InBattle = true
+                                value.InBattle = true
+                            } else {
+                                AlertWindow()
+                            }
+                        }
+                    }       
+            }
         }
-           
-    }
 })

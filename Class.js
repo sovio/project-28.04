@@ -1,6 +1,5 @@
 class Sprite {
-    constructor ({CanvPosition = {x:0, y:0}, imageSrc, frameMax = 1, collisions = {}}){
-        this.collisions = collisions
+    constructor ({CanvPosition = {x:0, y:0}, imageSrc, frameMax = 1}){
         this.CanvPosition = CanvPosition
         this.image = new Image()
         this.offset = {
@@ -64,20 +63,30 @@ class GameObject extends Sprite {
         CanvPosition,
         imageSrc,
         frameMax = 4,
-        lvl
+        lvl,
+        ObjID
     }){
         super({
             CanvPosition,
             imageSrc,
             frameMax
         })
+        this.ObjID = ObjID
         this.lvl = lvl
         this.width = 32
         this.height = 32
+        this.IsDead = false
         this.InBattle = false
         this.Skills = {
             BasicAttack: () => {console.log("Walę Basicem")},
-            StepForward: () => {console.log('Krok w przod')},
+            StepForward: () => {
+                
+                document.querySelectorAll('.Position').forEach((e) => {
+                    if(e.childNodes.length != 0){
+                    console.log(e,e.childNodes[0])
+                }
+                });
+            },
             StepBack: () => {console.log('Krok w tył')}
         }
     }
@@ -93,6 +102,8 @@ class GameObject extends Sprite {
             this.image.width / this.frameMax,
             this.image.height / this.frameMax
         )
+
+        
     }
     InfoBox({e}) {
         if (document.querySelector('#InfoBox') == null) {
@@ -131,13 +142,15 @@ class Warrior extends GameObject{
         lvl,
         CanvPosition,
         imageSrc,
-        frameMax
+        frameMax,
+        ObjID
     }){
         super({
             lvl,
             CanvPosition,
             imageSrc,
-            frameMax
+            frameMax,
+            ObjID
         })
         this.ClassName = 'Warrior'
         this.ShortClassName = 'W'
@@ -162,13 +175,15 @@ class Mage extends GameObject {
         lvl,
         CanvPosition,
         imageSrc,
-        frameMax
+        frameMax,
+        ObjID
     }){
         super({
             lvl,
             CanvPosition,
             imageSrc,
-            frameMax
+            frameMax,
+            ObjID
         })
         this.ClassName = 'Mage'
         this.ShortClassName = 'M'
@@ -214,13 +229,15 @@ class Player extends Mage {
         lvl,
         CanvPosition,
         imageSrc,
-        frameMax
+        frameMax,
+        ObjID
     }) {
         super({
             lvl,
             CanvPosition,
             imageSrc,
-            frameMax
+            frameMax,
+            ObjID
         })
         this.NickName = 'Sovio'
         this.lastKey = undefined
@@ -275,54 +292,56 @@ class Player extends Mage {
     }
 
     SCollisions ({obj,speed={}, x=1, key = null}) {
-        if((this.RelativePosition.x + speed.x >= 0 && 
-            this.RelativePosition.x + this.width + speed.x <= obj.image.width) && 
-            (this.RelativePosition.y+speed.y >= 0 && 
-            this.RelativePosition.y + this.height + speed.y <= obj.image.height)){
-                for (const [key, value] of Object.entries(obj.collisions)) {
-                    if (value.x + value.width <= this.RelativePosition.x + speed.x ||
-                        this.RelativePosition.x + this.width + speed.x <= value.x ||
-                        value.y >= this.RelativePosition.y + this.height + speed.y ||
-                        value.y + value.height <= this.RelativePosition.y + speed.y) {
-                    }else{
-                        this.Oncolision = false
-                        break;
+        if(this.InBattle === false){
+            if((this.RelativePosition.x + speed.x >= 0 && 
+                this.RelativePosition.x + this.width + speed.x <= obj.image.width) && 
+                (this.RelativePosition.y+speed.y >= 0 && 
+                this.RelativePosition.y + this.height + speed.y <= obj.image.height)){
+                    for (const [key, value] of Object.entries(obj.collisions)) {
+                        if (value.x + value.width <= this.RelativePosition.x + speed.x ||
+                            this.RelativePosition.x + this.width + speed.x <= value.x ||
+                            value.y >= this.RelativePosition.y + this.height + speed.y ||
+                            value.y + value.height <= this.RelativePosition.y + speed.y) {
+                        }else{
+                            this.Oncolision = false
+                            break;
+                        }
                     }
-                }
-                
-        } else {
-            this.Oncolision = false
-        }
-        if (this.Oncolision) {
-                this.ingo = true
-                const intervalID = setInterval(() => {        
-                
-                    if ((key === 'a' || key === 'd') &&
-                        (obj.CanvPosition.x-obj.offset.x+speed.x < 0 || 
-                        this.RelativePosition.x < 448 || 
-                        obj.offset.x - canv.width - speed.x < - obj.image.width || 
-                        this.RelativePosition.x + 448 > obj.image.width)) {
-                            this.playerMoveX({speed: speed})
-                            this.mapMoveY({obj: obj, position: speed})
-
-                    }else if (obj.CanvPosition.y + obj.offset.y - speed.y > 0 || 
-                            this.RelativePosition.y < 288 ||
-                            obj.offset.y - canv.height - speed.y < -obj.image.height || 
-                            this.RelativePosition.y + 288 > obj.image.height) {
-                                this.playerMoveY({speed: speed})
-                                this.mapMoveX({obj: obj, position: speed})
-
-                    } else  {
-
-                        this.mapMoveX({obj: obj, position: speed})
-                        this.mapMoveY({obj: obj, position: speed})
-                    } 
                     
-                    this.AnimationFrames({x: x, intervalID: intervalID})
-                    x++
-                }, 25);
-        }
-    } 
+            } else {
+                this.Oncolision = false
+            }
+            if (this.Oncolision) {
+                    this.ingo = true
+                    const intervalID = setInterval(() => {        
+                    
+                        if ((key === 'a' || key === 'd') &&
+                            (obj.CanvPosition.x-obj.offset.x+speed.x < 0 || 
+                            this.RelativePosition.x < 448 || 
+                            obj.offset.x - canv.width - speed.x < - obj.image.width || 
+                            this.RelativePosition.x + 448 > obj.image.width)) {
+                                this.playerMoveX({speed: speed})
+                                this.mapMoveY({obj: obj, position: speed})
+
+                        }else if (obj.CanvPosition.y + obj.offset.y - speed.y > 0 || 
+                                this.RelativePosition.y < 288 ||
+                                obj.offset.y - canv.height - speed.y < -obj.image.height || 
+                                this.RelativePosition.y + 288 > obj.image.height) {
+                                    this.playerMoveY({speed: speed})
+                                    this.mapMoveX({obj: obj, position: speed})
+
+                        } else  {
+
+                            this.mapMoveX({obj: obj, position: speed})
+                            this.mapMoveY({obj: obj, position: speed})
+                        } 
+                        
+                        this.AnimationFrames({x: x, intervalID: intervalID})
+                        x++
+                    }, 20);
+            }
+        }   
+    }
 }
 class Enemy extends Warrior {
     constructor({
@@ -330,13 +349,15 @@ class Enemy extends Warrior {
         CanvPosition,
         imageSrc,
         frameMax,
-        offset
+        offset,
+        ObjID
     }){
         super({
             lvl,
             CanvPosition,
             imageSrc,
-            frameMax
+            frameMax,
+            ObjID
         })
         this.offset = offset
         this.NickName = 'Szczur'
