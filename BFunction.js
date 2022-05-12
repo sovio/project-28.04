@@ -100,7 +100,13 @@ function Create({o={}}) {
     BtnChoose.className = 'Btn'
     BtnChoose.innerHTML = `<h3 class='BtnH3'>WYBIERZ</h3> <img src='img/button/normal.png' class='BtnImg'> `
     BtnChoose.addEventListener('click',() => {
-        BtnChooseF({o:o})
+        if (o.attacker.Tour) {
+            BtnChooseF({o:o})
+            EnemyUI({o:o})
+        } else {
+            console.log('Nie twoja tura')
+        }
+        
     })
     BtnChoose.style = `
     position: absolute;
@@ -238,19 +244,44 @@ function CharacterAllocationPlayer ({o={}}) {
         document.querySelector('#InfoBox').remove()
     })
 
-
     o.attacker.ClassName === 'Mage' ? document.querySelector('#RangePlayerPosition').appendChild(x) : document.querySelector('#MelePlayerPosition').appendChild(x)
    
 }
 
-function StartTimer() {
+function TourSwap({p1,p2}) {
+    p1.Tour = true
+    p2.Tour = false
+    clearInterval(Timer)
+    StartTimer()
+}
+
+function StartBattle({o={}}) {
+       if (RandomNumberGenerator(0,2) == 0) {
+           o.attacker.Tour = true
+           o.enemy.Tour = false
+           StartTimer({o:o})
+       } else { 
+           EnemyUI({o:o})
+       }
+}
+
+function EnemyUI({o={}}) {
+    console.log('Enemy tour', 'Wykonuje atak')
+    TourSwap({p1:o.attacker,p2:o.enemy})
+    console.log('Zmiana tury')
+}
+
+function StartTimer({o={}}) {
     let Time = 15
-    
     Timer = setInterval(() => {
         const x = document.querySelector('#TimerBox')   
         Time-=1
         x.innerHTML = Time
-        Time <= 0 ? clearInterval(Timer):false
+        if (Time <= 0) {
+            clearInterval(Timer)
+            hero.Skills.BasicAttack()
+            EnemyUI({o:o})
+        } 
     }, 1000);
     
 }
@@ -273,9 +304,10 @@ canv.addEventListener('click', (e) => {
                         if (!value.IsDead) {
                             if (!hero.InBattle || !value.InBattle) {
                                 Create({o: {attacker: hero, enemy: value}})
-                                StartTimer()
+                                
                                 hero.InBattle = true
                                 value.InBattle = true
+                                StartBattle({o: {attacker: hero, enemy: value}})
                             } else {
                                 AlertWindow()
                             }

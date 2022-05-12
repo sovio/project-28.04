@@ -276,15 +276,15 @@ const hero = new Player({
         lvl: 1,
         imageSrc: 'img/enemy.gif',
         offset: {
-            x: 224,
-            y: 96
+            x: 32,
+            y: 64
         }
     })
 }  
 
-  window.onload = () => {
+  /* window.onload = () => {
     Create({o: {attacker: hero, enemy: enemys[0]}})
     StartTimer()
     //hero.InBattle = true
     //enemys[0].InBattle = true
-  };
+  }; */

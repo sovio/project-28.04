@@ -77,8 +77,9 @@ class GameObject extends Sprite {
         this.height = 32
         this.IsDead = false
         this.InBattle = false
+        this.Tour = undefined
         this.Skills = {
-            BasicAttack: () => {console.log("Walę Basicem")},
+            BasicAttack: () => {console.log("Walę Basicem",this)},
             StepForward: () => {
                 
                 document.querySelectorAll('.Position').forEach((e) => {
@@ -210,6 +211,7 @@ class Mage extends GameObject {
                 let PlayerPrcentHP = Math.round(this.TrueHP / this.BasicHP * 100)
                 const content = `<span style = 'color: green'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: red'>${AValue}</span> obrażeń  postaci <span style = 'color: red'>${Enemy.NickName}(${EnemyPrcentHP}%)</span>`
                 ActionWindow({content: content})
+                TourSwap({p1:Enemy,p2:this})
             },
             FrostBall: ({Enemy}) => {
                 let AValue = this.BasicIntelect + RandomNumberGenerator(1,11)
@@ -219,6 +221,7 @@ class Mage extends GameObject {
                 let PlayerPrcentHP = Math.round(this.TrueHP / this.BasicHP * 100)
                 const content = `<span style = 'color: green'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: rgb(28, 159, 192)'>${AValue}</span> obrażeń postaci <span style = 'color: red'>${Enemy.NickName}(${EnemyPrcentHP}%)</span>`
                 ActionWindow({content: content})
+                TourSwap({p1:Enemy,p2:this})
             }
         })
     }
