@@ -106,7 +106,6 @@ function Create({o={}}) {
         } else {
             console.log('Nie twoja tura')
         }
-        
     })
     BtnChoose.style = `
     position: absolute;
@@ -136,7 +135,6 @@ function Create({o={}}) {
         clearInterval(Timer)
     })
     
-
     const BtnInfo = document.createElement('div')
     BtnInfo.innerHTML = `<h3 class='BtnH3'>INFO</h3> <img src='img/button/normal.png' class='BtnImg'> `
     BtnInfo.className = 'Btn'
@@ -146,8 +144,7 @@ function Create({o={}}) {
                 o.enemy.InBattle = false
                 o.enemy.IsDead = true
                 document.querySelector(`#Enemy_ID${o.enemy.ObjID}`).remove()
-            
-        
+
         //Alert z informacjami
     })
     BtnInfo.style = `
@@ -159,12 +156,10 @@ function Create({o={}}) {
         width: 56%;
     `
 
-    
     FBox.appendChild(LogBox)
     LogBox.appendChild(FrameImg)
     LogPosition.appendChild(StartRow)
     LogBox.appendChild(LogPosition)
-    
     
     FBox.appendChild(SkillBox)
     ChooseBox.appendChild(BtnClose)
@@ -189,7 +184,6 @@ function BtnChooseF({o}) {
         }
     })
     !varrible ? AlertWindow() : false
-    ; 
 }
 
 function ActionWindow({content}) {
@@ -245,7 +239,6 @@ function CharacterAllocationPlayer ({o={}}) {
     })
 
     o.attacker.ClassName === 'Mage' ? document.querySelector('#RangePlayerPosition').appendChild(x) : document.querySelector('#MelePlayerPosition').appendChild(x)
-   
 }
 
 function TourSwap({p1,p2}) {
@@ -275,7 +268,7 @@ function StartTimer({o={}}) {
     let Time = 15
     Timer = setInterval(() => {
         const x = document.querySelector('#TimerBox')   
-        Time-=1
+        Time -= 1
         x.innerHTML = Time
         if (Time <= 0) {
             clearInterval(Timer)
@@ -289,9 +282,9 @@ function StartTimer({o={}}) {
 canv.addEventListener('click', (e) => {
         for (const [key, value] of Object.entries(enemys)) {
             if (e.offsetX >= value.offset.x && 
-                e.offsetX <= value.offset.x+32 && 
+                e.offsetX <= value.offset.x + 32 && 
                 e.offsetY >= value.offset.y && 
-                e.offsetY <= value.offset.y+32) {
+                e.offsetY <= value.offset.y + 32) {
                 if ((hero.RelativePosition.x - value.offset.x === 32 && 
                     hero.RelativePosition.y - value.offset.y === 0) ||
                     (hero.RelativePosition.x - value.offset.x === -32 &&
