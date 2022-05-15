@@ -79,7 +79,24 @@ class GameObject extends Sprite {
         this.InBattle = false
         this.Tour = undefined
         this.Skills = {
-            BasicAttack: () => {console.log("Walę Basicem",this)},
+            BasicAttack: ({o}) => {
+                let AValue = this.BasicStrange/4 + RandomNumberGenerator(1,11)
+                //let AValue = 1
+                AValue = Math.round(AValue - o.enemy.BasicArmor)
+                AValue < 0 ? AValue = 0:false
+                o.enemy.TrueHP -= AValue
+                let EnemyPrcentHP = Math.round(o.enemy.TrueHP / o.enemy.BasicHP * 100)
+                EnemyPrcentHP < 0 ? EnemyPrcentHP = 0 : false
+                let PlayerPrcentHP = Math.round(this.TrueHP / this.BasicHP * 100)
+                PlayerPrcentHP < 0 ? PlayerPrcentHP = 0 : false
+                let content = `<span style = 'color: red'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: gray'>${AValue}</span> obrażeń  postaci <span style = 'color: red'>${o.enemy.NickName}(${EnemyPrcentHP}%)</span>`
+                if (this.IsHero === true){
+                    content = `<span style = 'color: green'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: gray'>${AValue}</span> obrażeń  postaci <span style = 'color: green'>${o.enemy.NickName}(${EnemyPrcentHP}%)</span>`
+                }
+                ActionWindow({content: content})
+                o.enemy.TrueHP <= 0 ? EndBattle({o:o}) : TourSwap({p1:o.enemy,p2:this,o:o}) 
+                },
+
             StepForward: () => {
                 
                 document.querySelectorAll('.Position').forEach((e) => {
@@ -159,7 +176,7 @@ class Warrior extends GameObject{
         this.BasicStrange = 10;
         this.BasicAgility = 3
         this.BasicDodge = 3;
-        this.BasicArmon = 6;
+        this.BasicArmor = 6;
         this.BasicResists = {
             Fire: 0.32,
             Frost: 0.12,
@@ -192,7 +209,7 @@ class Mage extends GameObject {
         this.BasicStrange = 1;
         this.BasicAgility = 2
         this.BasicDodge = 5;
-        this.BasicArmon = 0;
+        this.BasicArmor = 0;
         this.BasicResists = {
             Fire: 0.62,
             Frost: 0.54,
@@ -203,25 +220,29 @@ class Mage extends GameObject {
         this.TrueHP = this.BasicHP
 
         this.Skills = Object.assign({}, this.Skills, {
-            FireBall: ({Enemy}) => {
+            FireBall: ({o}) => {
                 let AValue = this.BasicIntelect + RandomNumberGenerator(1,11)
-                AValue = Math.round(AValue - Enemy.BasicResists.Fire * AValue)
-                Enemy.TrueHP -= AValue
-                let EnemyPrcentHP = Math.round(Enemy.TrueHP / Enemy.BasicHP * 100)
+                AValue = Math.round(AValue - o.enemy.BasicResists.Fire * AValue)
+                o.enemy.TrueHP -= AValue
+                let EnemyPrcentHP = Math.round(o.enemy.TrueHP / o.enemy.BasicHP * 100)
+                EnemyPrcentHP < 0 ? EnemyPrcentHP = 0 : false
                 let PlayerPrcentHP = Math.round(this.TrueHP / this.BasicHP * 100)
-                const content = `<span style = 'color: green'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: red'>${AValue}</span> obrażeń  postaci <span style = 'color: red'>${Enemy.NickName}(${EnemyPrcentHP}%)</span>`
+                PlayerPrcentHP < 0 ? PlayerPrcentHP = 0 : false
+                const content = `<span style = 'color: green'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: red'>${AValue}</span> obrażeń  postaci <span style = 'color: red'>${o.enemy.NickName}(${EnemyPrcentHP}%)</span>`
                 ActionWindow({content: content})
-                TourSwap({p1:Enemy,p2:this})
+                o.enemy.TrueHP <= 0 ? EndBattle({o:o}) : TourSwap({p1:o.enemy,p2:this,o:o})
             },
-            FrostBall: ({Enemy}) => {
+            FrostBall: ({o}) => {
                 let AValue = this.BasicIntelect + RandomNumberGenerator(1,11)
-                AValue = Math.round(AValue - Enemy.BasicResists.Frost * AValue)
-                Enemy.TrueHP -= AValue
-                let EnemyPrcentHP = Math.round(Enemy.TrueHP / Enemy.BasicHP * 100)
+                AValue = Math.round(AValue - o.enemy.BasicResists.Frost * AValue)
+                o.enemy.TrueHP -= AValue
+                let EnemyPrcentHP = Math.round(o.enemy.TrueHP / o.enemy.BasicHP * 100)
+                EnemyPrcentHP < 0 ? EnemyPrcentHP = 0 : false
                 let PlayerPrcentHP = Math.round(this.TrueHP / this.BasicHP * 100)
-                const content = `<span style = 'color: green'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: rgb(28, 159, 192)'>${AValue}</span> obrażeń postaci <span style = 'color: red'>${Enemy.NickName}(${EnemyPrcentHP}%)</span>`
+                PlayerPrcentHP < 0 ? PlayerPrcentHP = 0 : false
+                const content = `<span style = 'color: green'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: rgb(28, 159, 192)'>${AValue}</span> obrażeń postaci <span style = 'color: red'>${o.enemy.NickName}(${EnemyPrcentHP}%)</span>`
                 ActionWindow({content: content})
-                TourSwap({p1:Enemy,p2:this})
+                o.enemy.TrueHP <= 0 ? EndBattle({o:o}) : TourSwap({p1:o.enemy,p2:this,o:o})
             }
         })
     }
@@ -242,6 +263,7 @@ class Player extends Mage {
             frameMax,
             ObjID
         })
+        this.IsHero = true
         this.NickName = 'Sovio'
         this.lastKey = undefined
         this.Oncolision = false
@@ -363,6 +385,6 @@ class Enemy extends Warrior {
             ObjID
         })
         this.offset = offset
-        this.NickName = 'Szczur'
+        this.NickName = 'Bandyta'
     }
 }

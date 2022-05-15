@@ -102,7 +102,7 @@ function Create({o={}}) {
     BtnChoose.addEventListener('click',() => {
         if (o.attacker.Tour) {
             BtnChooseF({o:o})
-            EnemyUI({o:o})
+            o.enemy.TrueHP >= 0 ? EnemyUI({o:o}) : false
         } else {
             console.log('Nie twoja tura')
         }
@@ -178,7 +178,7 @@ function BtnChooseF({o}) {
             document.querySelectorAll('.LabelBox').forEach((e1) => {
                 if (e.id === e1.attributes.for.nodeValue) {
                     varrible = true
-                    e1.LFunction({Enemy: o.enemy})
+                    e1.LFunction({o:o})
                 }
             })
         }
@@ -241,11 +241,24 @@ function CharacterAllocationPlayer ({o={}}) {
     o.attacker.ClassName === 'Mage' ? document.querySelector('#RangePlayerPosition').appendChild(x) : document.querySelector('#MelePlayerPosition').appendChild(x)
 }
 
-function TourSwap({p1,p2}) {
+
+function EndBattle({o}) {
+    if (o.enemy.TrueHP <= 0) {
+        o.attacker.InBattle = false
+        o.enemy.InBattle = false
+        o.enemy.IsDead = true
+        document.querySelector(`#Enemy_ID${o.enemy.ObjID}`).remove()
+        document.querySelector('#BtnChoose').style.pointerEvents = 'none';
+        document.querySelectorAll('h3')[2].style.pointerEvents = 'none';
+        clearInterval(Timer)
+    }
+}
+
+function TourSwap({p1,p2,o}) {
     p1.Tour = true
     p2.Tour = false
     clearInterval(Timer)
-    StartTimer()
+    StartTimer({o:o})
 }
 
 function StartBattle({o={}}) {
@@ -259,9 +272,8 @@ function StartBattle({o={}}) {
 }
 
 function EnemyUI({o={}}) {
-    console.log('Enemy tour', 'Wykonuje atak')
-    TourSwap({p1:o.attacker,p2:o.enemy})
-    console.log('Zmiana tury')
+    o.enemy.Skills.BasicAttack({o:{attacker:o.enemy,enemy:o.attacker}})
+    TourSwap({p1:o.attacker,p2:o.enemy,o:o})
 }
 
 function StartTimer({o={}}) {
@@ -272,7 +284,7 @@ function StartTimer({o={}}) {
         x.innerHTML = Time
         if (Time <= 0) {
             clearInterval(Timer)
-            hero.Skills.BasicAttack()
+            hero.Skills.BasicAttack({o:o})
             EnemyUI({o:o})
         } 
     }, 1000);
