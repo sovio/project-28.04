@@ -89,7 +89,7 @@ class GameObject extends Sprite {
                 EnemyPrcentHP < 0 ? EnemyPrcentHP = 0 : false
                 let PlayerPrcentHP = Math.round(this.TrueHP / this.BasicHP * 100)
                 PlayerPrcentHP < 0 ? PlayerPrcentHP = 0 : false
-                let content = `<span style = 'color: red'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: gray'>${AValue}</span> obrażeń  postaci <span style = 'color: red'>${o.enemy.NickName}(${EnemyPrcentHP}%)</span>`
+                let content = `<span style = 'color: red'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: gray'>${AValue}</span> obrażeń  postaci <span style = 'color: green'>${o.enemy.NickName}(${EnemyPrcentHP}%)</span>`
                 if (this.IsHero === true){
                     content = `<span style = 'color: green'>${this.NickName}(${PlayerPrcentHP}%)</span> zadał <span style = 'color: gray'>${AValue}</span> obrażeń  postaci <span style = 'color: green'>${o.enemy.NickName}(${EnemyPrcentHP}%)</span>`
                 }
@@ -97,7 +97,7 @@ class GameObject extends Sprite {
                 o.enemy.TrueHP <= 0 ? EndBattle({o:o}) : TourSwap({p1:o.enemy,p2:this,o:o}) 
                 },
 
-            StepForward: () => {
+            /* StepForward: () => {
                 
                 document.querySelectorAll('.Position').forEach((e) => {
                     if(e.childNodes.length != 0){
@@ -105,7 +105,7 @@ class GameObject extends Sprite {
                 }
                 });
             },
-            StepBack: () => {console.log('Krok w tył')}
+            StepBack: () => {console.log('Krok w tył')} */
         }
     }
     draw() {

@@ -276,10 +276,19 @@ const hero = new Player({
         lvl: 1,
         imageSrc: 'img/enemy.gif',
         offset: {
-            x: 32,
-            y: 64
+            x: 704,
+            y: 576
         }
-    })
+    }),
+    1: new Enemy({
+        ObjID: 3,
+        lvl: 3,
+        imageSrc: 'img/en2.gif',
+        offset: {
+            x: 288,
+            y: 192
+        }
+    }),
 }  
 
   /* window.onload = () => {

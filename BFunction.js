@@ -143,8 +143,7 @@ function Create({o={}}) {
                 o.attacker.InBattle = false
                 o.enemy.InBattle = false
                 o.enemy.IsDead = true
-                document.querySelector(`#Enemy_ID${o.enemy.ObjID}`).remove()
-
+                document.querySelector(`#Obj_ID${o.enemy.ObjID}`).remove()
         //Alert z informacjami
     })
     BtnInfo.style = `
@@ -196,7 +195,7 @@ function ActionWindow({content}) {
 
 function CharacterAllocationEnemy ({o={}}) {
     const y = document.createElement('div')
-    y.id = `Enemy_ID${o.enemy.ObjID}`
+    y.id = `Obj_ID${o.enemy.ObjID}`
     y.style = `
     position: absolute;
     left: 0;
@@ -220,6 +219,7 @@ function CharacterAllocationEnemy ({o={}}) {
 
 function CharacterAllocationPlayer ({o={}}) {
     const x = document.createElement('div')
+    x.id = `Obj_ID${o.attacker.ObjID}`
     x.style = `
         position: absolute;
         left: 0;
@@ -243,14 +243,15 @@ function CharacterAllocationPlayer ({o={}}) {
 
 
 function EndBattle({o}) {
-    if (o.enemy.TrueHP <= 0) {
+    if (o.enemy.TrueHP <= 0) { 
         o.attacker.InBattle = false
         o.enemy.InBattle = false
         o.enemy.IsDead = true
-        document.querySelector(`#Enemy_ID${o.enemy.ObjID}`).remove()
-        document.querySelector('#BtnChoose').style.pointerEvents = 'none';
-        document.querySelectorAll('h3')[2].style.pointerEvents = 'none';
         clearInterval(Timer)
+        console.log('cleared')
+        document.querySelector(`#Obj_ID${o.enemy.ObjID}`).remove()
+        document.querySelector('#BtnChoose').style.pointerEvents = 'none';
+        document.querySelectorAll('h3')[2].style.pointerEvents = 'none';   
     }
 }
 
@@ -297,6 +298,7 @@ canv.addEventListener('click', (e) => {
                 e.offsetX <= value.offset.x + 32 && 
                 e.offsetY >= value.offset.y && 
                 e.offsetY <= value.offset.y + 32) {
+                    console.log('click')
                 if ((hero.RelativePosition.x - value.offset.x === 32 && 
                     hero.RelativePosition.y - value.offset.y === 0) ||
                     (hero.RelativePosition.x - value.offset.x === -32 &&
@@ -306,6 +308,7 @@ canv.addEventListener('click', (e) => {
                     (hero.RelativePosition.x - value.offset.x === 0 &&
                     hero.RelativePosition.y - value.offset.y === -32)
                     ){
+                        console.log('fight')
                         if (!value.IsDead) {
                             if (!hero.InBattle || !value.InBattle) {
                                 Create({o: {attacker: hero, enemy: value}})
