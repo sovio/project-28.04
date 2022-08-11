@@ -4,7 +4,9 @@ class Sprite {
         this.image = new Image()
         this.offset = {
             x:0,
-            y:0
+            y:0,
+            h:0
+            
         }
         this.image.src = imageSrc
         this.frameMax = frameMax
